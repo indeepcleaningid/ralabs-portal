@@ -166,3 +166,18 @@ Format entri:
   - Sebelumnya `/halaman-ngawur-123` mengembalikan status 404 tetapi menampilkan template 404 bawaan Hostinger, bukan `404.html` milik kita. Penyebabnya tidak ada konfigurasi ErrorDocument, jadi ditambahkan lewat `.htaccess`
 - Belum diuji di batch ini: tampilan 404 custom di live, baru bisa dicek SESUDAH PR ini merge dan ke-deploy. Kalau masih juga tampil template Hostinger setelah deploy, langkah cadangan adalah mengatur custom error page lewat hPanel, bagian itu dari sisi panel Bang Rob
 - Catatan opsional (belum dikerjakan, bukan kebutuhan v1): `www.ralabs.my.id` masih menyajikan isi sama tanpa redirect ke domain utama. Canonical sudah menunjuk ke domain tanpa www, jadi SEO aman, redirect www hanya rapi-rapi
+
+## 16 Okt 2026, Pasca merge PR 2: buka tutup temuan tersisa
+
+- Tanggal: 16 Okt 2026
+- File yang berubah: `engineering.md` saja (catatan verifikasi, tanpa ubahan kode)
+- Hasil verifikasi:
+  - 404 custom SETELAH deploy: `https://ralabs.my.id/halaman-ngawur-123` mengembalikan status 404 dan menampilkan halaman 404 milik portal, yaitu judul 404, teks "Halaman tidak ketemu", tombol "Ke Portal Utama". Template Hostinger tidak tampil lagi, `.htaccess` terbaca server. Temuan dari PR 2 resmi tertutup
+  - Zoom dan overflow di lebar 320, 480, 640 (setara zoom 200 persen dari 1280), dan 1280: tidak ada scroll horizontal, tidak ada teks terpotong. Ini verifikasi terakhir dari plan bagian 6 yang belum pernah dikerjakan
+  - `npm audit`: 7 temuan, semuanya ada di rantai dependensi build time milik tailwindcss (braces dan postcss-selector-parser), tidak ikut masuk bundle produksi. `npm audit fix` tanpa force terbukti no-op, nol file berubah. Force berarti meloncat dari Tailwind 3.4 ke 4, melanggar stack yang sudah dikunci. Keputusan: diterima seperti adanya, karena hanya kena alat build, perlu keputusan Bang Rob kalau suatu saat mau migrasi Tailwind 4
+- Sisa yang butuh keputusan Bang Rob, bukan bug:
+  - Nama asli 5 slot subdomain, sekarang masih isi `app1` sampai `app4` plus `tools`
+  - Titik lebar penuh section Alur, sekarang mulai di 768 yang sempit, bisa digeser ke 1024 kalau mau lebih lega
+  - Redirect `www` ke domain utama, sekarang masih menyajikan isi sama
+  - Verifikasi link LinkedIn dari browser pribadi, karena IP server diblokir LinkedIn
+  - Cek laporan Realtime GA4 dari akun analytics milik Bang Rob
