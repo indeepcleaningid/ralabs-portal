@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --nb-raised: -6px -6px 12px #ffffff, 6px 6px 12px #c4cdd8;
+  --nb-inset: inset -4px -4px 8px #ffffff, inset 4px 4px 8px #c4cdd8;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #e8eef4;
+    color: #1b1b1b;
+    font-family: 'Comfortaa', ui-rounded, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Jangan pernah hilangkan outline tanpa ganti, keyboard user harus tetap kelihatan */
+  :focus-visible {
+    outline: 3px solid #d70000;
+    outline-offset: 3px;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+@layer components {
+  .neu-card {
+    background-color: #ffffff;
+    border-radius: 1.25rem;
+    box-shadow: var(--nb-raised);
+  }
+
+  .neu-inset {
+    border-radius: 1.25rem;
+    box-shadow: var(--nb-inset);
+  }
+
+  .neu-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border-radius: 9999px;
+    padding: 0.3rem 0.85rem;
+    background-color: #e8eef4;
+    box-shadow: var(--nb-inset);
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 0.75rem;
+  }
+}

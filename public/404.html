@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- 404 tidak boleh diindex mesin pencari -->
+    <meta name="robots" content="noindex" />
+    <title>404. Halaman Tidak Ketemu | RaLabs</title>
+    <link rel="icon" type="image/webp" href="/images/favicon-logo.webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Halaman statis, jadi styling ditulis langsung di sini tanpa CSS build -->
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e8eef4;
+        color: #1b1b1b;
+        font-family: 'Comfortaa', ui-rounded, sans-serif;
+        text-align: center;
+      }
+
+      .box {
+        padding: 2rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2rem, 6vw, 3rem);
+      }
+
+      p {
+        margin: 1rem 0 0;
+        color: rgba(27, 27, 27, 0.8);
+      }
+
+      a.button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+        padding: 0 1.5rem;
+        border-radius: 9999px;
+        background-color: #d70000;
+        color: #ffffff;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      a.button:hover {
+        opacity: 0.9;
+      }
+
+      a:focus-visible {
+        outline: 3px solid #d70000;
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="box">
+      <h1>404.</h1>
+      <p>Halaman tidak ketemu. Balik ke portal utama.</p>
+      <a class="button" href="/">Ke Portal Utama</a>
+    </main>
+  </body>
+</html>
