@@ -146,3 +146,23 @@ Format entri:
   - Alur di lebar 768 sempit, tapi tidak ada teks terpotong dan tidak ada scroll horizontal, jadi dibiarkan. Kalau Bang Rob mau lega, titik panah bisa digeser dari breakpoint md ke lg
   - Komponen `Seo.jsx` dari struktur plan tidak dibuat, karena meta SEO sudah lengkap di `entries/index.html` dan portal ini satu halaman, jadi memisahkannya ke komponen tidak menambah nilai
   - Footer memakai copy "Dibangun dengan React dan PHP di shared hosting" persis seperti plan, walau PHP belum dipakai di v1. Ini copy pemilik, bukan klaim teknis halaman
+
+## 16 Okt 2026, Validasi produksi dan fix halaman 404
+
+- Tanggal: 16 Okt 2026
+- Judul: portal live di ralabs.my.id, satu temuan 404 custom belum terpakai
+- File yang berubah:
+  - Baru: `.htaccess` (satu baris ErrorDocument 404 ke /404.html)
+- Hasil validasi produksi di https://ralabs.my.id/:
+  - Halaman utama status 200, isi HTML identik persis dengan `dist/entries/index.html` hasil build lokal
+  - Bundle yang diload `main-BI1AvY-B.js` plus `main-D1N9zIu4.css`, hash cocok dengan build, artinya yang live memang kode hasil merge PR 1
+  - Title, description, OG image, JSON-LD, dan tag GA4 lengkap
+  - GA4 terbukti bukan cuma kode mati: ada request jaringan asli ke `google-analytics.com/g/collect` berisi `tid=G-QCTML33T41` dan `en=page_view`, pageview awal tepat satu
+  - Semua section terender di DOM produksi, console tanpa error JavaScript
+  - Menu mobile diuji asli di domain live: buka, Escape tutup, CTA hero mengubah hash ke #koleksi
+  - robots.txt, sitemap.xml, humans.txt, 404.html, semua gambar: status 200
+  - http redirect ke https berjalan
+- Temuan yang diperbaiki di PR ini:
+  - Sebelumnya `/halaman-ngawur-123` mengembalikan status 404 tetapi menampilkan template 404 bawaan Hostinger, bukan `404.html` milik kita. Penyebabnya tidak ada konfigurasi ErrorDocument, jadi ditambahkan lewat `.htaccess`
+- Belum diuji di batch ini: tampilan 404 custom di live, baru bisa dicek SESUDAH PR ini merge dan ke-deploy. Kalau masih juga tampil template Hostinger setelah deploy, langkah cadangan adalah mengatur custom error page lewat hPanel, bagian itu dari sisi panel Bang Rob
+- Catatan opsional (belum dikerjakan, bukan kebutuhan v1): `www.ralabs.my.id` masih menyajikan isi sama tanpa redirect ke domain utama. Canonical sudah menunjuk ke domain tanpa www, jadi SEO aman, redirect www hanya rapi-rapi

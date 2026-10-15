@@ -1,0 +1,3 @@
+# Tanpa baris ini, Hostinger menampilkan template 404 bawaan mereka,
+# bukan 404.html milik portal. Status tetap 404, hanya tampilannya yang salah.
+ErrorDocument 404 /404.html
