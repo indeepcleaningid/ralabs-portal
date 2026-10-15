@@ -1,0 +1,14 @@
+/* TEAM */
+Name: Robby Aliasa Akbar
+Role: Founder, Bengkel Kode dan Karya
+Location: Bekasi, Indonesia
+
+/* SITE */
+Standards: HTML5, CSS3, JavaScript
+Components: React 18, Vite 6, Tailwind CSS 3.4, Framer Motion
+Software: Node.js, Git
+Host: Hostinger shared hosting (Apache)
+Language: Bahasa Indonesia
+
+/* THANKS */
+Font Comfortaa dan JetBrains Mono dari Google Fonts.
