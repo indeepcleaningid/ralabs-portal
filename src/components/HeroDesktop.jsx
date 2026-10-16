@@ -15,7 +15,6 @@ export default function HeroDesktop({ started }) {
 
   return (
     <section
-      id="home"
       className="relative w-full overflow-hidden bg-white"
       style={{ height: '56.25vw' }}
       aria-hidden="true"
@@ -63,7 +62,7 @@ export default function HeroDesktop({ started }) {
           menyusut ke ukuran normal, pas nemplok ada tekanan + jelly squash/
           stretch, lalu stabil. Lapisan dalam (-rotate-2, scale-0.9, tilt)
           nggak disentuh biar bentuk akhir tetap persis. */}
-      <div className="absolute left-0 top-[calc(22%-50px+10px)] z-10 flex w-full justify-center">
+      <div className="absolute left-0 top-[calc(22%-50px+10px+10px)] z-10 flex w-full justify-center">
         <motion.div
           className="w-fit origin-center"
           initial={{ opacity: 0, x: 0, y: 0, scaleX: 1.7, scaleY: 1.7 }}
@@ -148,7 +147,7 @@ export default function HeroDesktop({ started }) {
           squash (melebar+melempem) -> stretch (meregang) -> menyusut -> stabil 1:1,
           kayak jelly jatuh. Origin bawah biar "menghantam" ke permukaan. */}
       <motion.div
-        className="absolute left-[calc(65%+0px-100px+50px)] top-[calc(13%+50px-100px-30px-20px-30px-50px)] h-[76.8%] w-[28.8%] origin-bottom"
+        className="absolute left-[calc(65%+0px-100px+50px)] top-[calc(13%+50px-100px-30px-20px-30px-50px+15px)] h-[76.8%] w-[28.8%] origin-bottom"
         initial={{ opacity: 0, y: '-110vh', scaleX: 1, scaleY: 1 }}
         animate={
           started
