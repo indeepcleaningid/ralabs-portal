@@ -250,3 +250,25 @@ Format entri:
   - #7: Redesign Hero Mobile (360x800) sesuai artboard
 - Catatan jujur:
   - Tablet dan mobile masih placeholder di `HeroTablet.jsx` / `HeroMobile.jsx`, menunggu dikerjakan lewat issue #6 dan #7
+
+## 16 Okt 2026, Micro-manage animasi hero desktop + preloader final
+
+- Tanggal: 16 Okt 2026
+- Judul: stagger animasi pasca preload (eyebrow baseline), card kanan turun lurus -> jelly -> baru miring, fix elemen dobel di card logo, preloader rampung (logo gabungan, tilt, tombol super bold)
+- File yang berubah:
+  - Ubah: `src/components/HeroDesktop.jsx` (delay stagger tiap animasi, rotasi card dipindah ke akhir animasi, scale pindah ke framer style biar ukuran tak berubah, hapus dekorasi dobel `!` dan 2 strip di card, posisi card naik 50px lalu geser kiri 100px lalu kanan 50px)
+  - Ubah: `src/components/Preloader.jsx` (logo ganti `logo-preload.webp` ukuran 396px + TiltCard, tombol "Buka Portal" 48px font-black + stroke putih, pill dikecilin 10% dua kali, stroke pakai currentColor biar hover hitam solid)
+  - Ubah: `src/pages/Home.jsx`, `src/components/Hero.jsx`, `src/components/Navbar.jsx`, `src/styles/global.css` (rantai prop `started` biar semua animasi mulai setelah preloader kelar)
+  - Baru: `public/images/logo-preload.webp` (gabungan favicon kubus + logo-text, desain Bang Rob, 651x651)
+  - Hasil build dicopy ke root: `index.html`, `assets/`, `images/`
+- Hasil tes:
+  - Dev server 5015 HMR: semua perubahan tampil tanpa error console
+  - Stagger pasca preload (eyebrow baseline t=0): eyebrow 0s/1.3s, card kanan 0.3s/1.4s, banner headline 0.5s/1.4s, group quote 0.7s/1.1s, kartu ENJOY 1s/1.3s. Semua mulai dari opacity 0
+  - Card kanan: turun lurus 0° bersama jelly, setelah settle (delay 1.7s) baru miring -6° durasi 0.25s, ukuran efektif 0.729 (0.81 dikali 0.9 = dikecilin 10%), posisi akhir naik 50px dan geser 50px ke kiri dari posisi semua
+  - Fix elemen dobel: span "!" dan 2 strip di card dihapus karena `favicon-logo.webp` sudah punya "!" dan 2 slash sendiri (dibuktikan ukur pixel: geometri elemen di design card identik dengan yang baked di file logo, jarak "!" ke band merah 46px dan slash 195px dari band sama persis). Sekarang card tampil satu set, tidak dobel
+  - Preloader: logo gabungan 396px max 95vw dengan tilt 8 derajat, animasi turun tetap; tombol "Buka Portal" font 48px font-black + stroke 0.12vw currentColor (pas hover bg putih teks ink stroke ikut ink), pill jadi px-16 py-6 dulu lalu dikecilin 10% dua kali jadi 3.24rem/1.215rem
+  - `npm run build`: sukses, bundle terhash
+  - Build dicopy ke root sesuai contributing.md, md5 bundle root sama dengan `dist/assets/`
+- Catatan jujur:
+  - Preloader masih tampil tiap refresh (sengaja, biar gampang micro-manage); belum dikembalikan ke sekali per sesi (sessionStorage)
+  - Issue #6 (tablet) dan #7 (mobile) masih pending, belum dikerjakan di batch ini

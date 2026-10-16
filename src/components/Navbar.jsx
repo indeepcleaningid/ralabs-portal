@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import TiltCard from './TiltCard.jsx'
 
 // Link nav diisi per batch begitu section-nya benar benar ada.
@@ -13,7 +14,7 @@ const NAV_ITEMS = [
 
 const GITHUB_URL = 'https://github.com/indeepcleaningid/ralabs-portal'
 
-export default function Navbar() {
+export default function Navbar({ started }) {
   const [open, setOpen] = useState(false)
   const [active, setActive] = useState('koleksi')
   const [ghBounce, setGhBounce] = useState(false)
@@ -59,7 +60,12 @@ export default function Navbar() {
   }, [open])
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+    <motion.header
+      className="pointer-events-none fixed inset-x-0 top-0 z-50"
+      initial={{ opacity: 0 }}
+      animate={started ? { opacity: 1 } : { opacity: 0 }}
+      transition={{ duration: 0.8, ease: 'easeOut' }}
+    >
       <nav className="pointer-events-auto relative mx-auto mt-4 flex h-[52px] max-w-6xl items-center justify-between rounded-full bg-white pl-5 pr-2 shadow-[0_6px_24px_rgba(27,24,24,0.18)] sm:pl-8">
         <a href="/" className="flex shrink-0 items-center gap-2" aria-label="RaLabs beranda">
           <img
@@ -161,6 +167,6 @@ export default function Navbar() {
           </ul>
         )}
       </nav>
-    </header>
+    </motion.header>
   )
 }

@@ -38,6 +38,24 @@
       opacity: 1;
     }
   }
+
+  /* Eyebrow: mulai invisible & kecil, muncul lewat zoom in + fade in
+     (overshoot tipis dulu), mendarat di ukuran stay (scale 0.81).
+     Nggak ada frame di mana eyebrow tampil normal lebih dulu. */
+  @keyframes eyebrow-zoom {
+    0% {
+      opacity: 0;
+      transform: scale(0.45);
+    }
+    70% {
+      opacity: 1;
+      transform: scale(0.9);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(0.81);
+    }
+  }
 }
 
 @layer components {
