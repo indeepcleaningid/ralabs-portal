@@ -5,8 +5,9 @@ import HeroMobile from './HeroMobile.jsx'
 // Pengatur Hero: tampilkan sesuai breakpoint.
 // - Desktop  : lg ke atas   -> HeroDesktop (SUDAH DI-LOCK)
 // - Tablet   : md sampai lg -> HeroTablet (SUDAH DI-LOCK)
-// - Mobile   : di bawah md  -> HeroMobile  (BELUM dibuat, masih placeholder)
+// - Mobile   : di bawah md  -> HeroMobile
 // Penting: tiap versi file sendiri-sendiri, jadi ngurus satu gak ngerusak yang lain.
+// Prop `started` wajib diteruskan ke tiap versi, biar animasi pasca-preloader jalan.
 export default function Hero({ started }) {
   return (
     <section id="home" aria-label="Beranda" className="relative w-full">
@@ -17,7 +18,7 @@ export default function Hero({ started }) {
         <HeroTablet started={started} />
       </div>
       <div className="block md:hidden">
-        <HeroMobile />
+        <HeroMobile started={started} />
       </div>
     </section>
   )

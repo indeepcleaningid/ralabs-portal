@@ -6,6 +6,8 @@ import TiltCard from './TiltCard.jsx'
 // - Tombol muncul pelan (fade in) setelah logo mendarat.
 // - Pas tombol diklik, tirai (2 panel) kebuka ke samping, homepage muncul.
 // SEMENTARA tampil tiap refresh biar gampang di-micro-manage.
+// 🔒 LOCKED sama Bang Rob (16 Okt 2026), termasuk ukuran khusus mobile (<768px).
+// Jangan diubah kecuali diminta eksplisit.
 export default function Preloader({ onDone }) {
   const [done, setDone] = useState(false)
   const [opening, setOpening] = useState(false)
@@ -77,20 +79,28 @@ export default function Preloader({ onDone }) {
           style={{ transform: landed ? 'translateY(0)' : 'translateY(-60vh)' }}
         >
           <TiltCard maxTilt={8}>
+            {/* Mobile (<768px): 396px itu 110% lebar layar 360px, jadi di-cap 95vw
+                dan hasilnya 342px alias hampir selebar layar. Di-override jadi 60vw
+                (216px di 360px) + cap 300px biar gak balik kegedean di layar lebar. */}
             <img
               src="/images/logo-preload.webp"
               alt="RaLabs"
-              className="w-[396px] max-w-[95vw]"
+              className="w-[396px] max-w-[95vw] max-md:w-[60vw] max-md:max-w-[300px]"
             />
           </TiltCard>
         </div>
 
         <span className="inline-flex">
           <TiltCard maxTilt={10}>
+            {/* Mobile (<768px): text-[48px] + px-[3.24rem] butuh ±394px, padahal
+                lebar dalam tombol cuma 254px di layar 360px → teks "Buka Portal"
+                wrap jadi 2 baris dan tombolnya mentok tepi. Di-override: font &
+                padding ikut vw (di-cap pakai clamp) + whitespace-nowrap biar
+                teksnya tetap satu baris. */}
             <button
               type="button"
               onClick={handleOpen}
-              className="animate-[fadeIn_0.8s_ease-out_0.9s_both] rounded-full bg-accent px-[3.24rem] py-[1.215rem] font-display text-[48px] font-black text-white transition-colors duration-200 hover:bg-white hover:text-ink [-webkit-text-stroke:0.12vw_currentColor]"
+              className="animate-[fadeIn_0.8s_ease-out_0.9s_both] rounded-full bg-accent px-[3.24rem] py-[1.215rem] font-display text-[48px] font-black text-white transition-colors duration-200 hover:bg-white hover:text-ink [-webkit-text-stroke:0.12vw_currentColor] max-md:whitespace-nowrap max-md:px-[clamp(19px,7.2vw,35px)] max-md:py-[clamp(10px,2.88vw,14px)] max-md:text-[length:clamp(21px,6vw,30px)]"
             >
               Buka Portal
             </button>
