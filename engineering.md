@@ -181,3 +181,35 @@ Format entri:
   - Redirect `www` ke domain utama, sekarang masih menyajikan isi sama
   - Verifikasi link LinkedIn dari browser pribadi, karena IP server diblokir LinkedIn
   - Cek laporan Realtime GA4 dari akun analytics milik Bang Rob
+
+## 16 Okt 2026, Redesign hero desktop sesuai artboard Bang Rob + preloader
+
+- Tanggal: 16 Okt 2026
+- Judul: hero desktop ulang persis artboard Full HD/2K/4K (surface 4 blok, banner, quote, kartu ENJOY, maskot, poster), navbar Home + pill floating, preloader "Buka Portal" dengan tirai, split layout tablet/mobile, checkpoint
+- File yang berubah:
+  - Token warna baru di `tailwind.config.js`: `ink` `#1B1818`, `accent` `#E3222B`, tambah `sun` `#FFE578`
+  - `src/styles/global.css`: body warna ink, `:focus-visible` accent, keyframe `fadeIn`
+  - Baru: `public/images/mascot-enjoy.svg` (maskot ENJOY di-extract dari artboard)
+  - Baru: `src/components/TiltCard.jsx` (efek 3D tilt mengikuti mouse, pakai framer-motion)
+  - Baru: `src/components/Preloader.jsx` (overlay hitam + logo turun + tombol "Buka Portal" + tirai belah dua ke samping)
+  - Baru: `src/components/HeroDesktop.jsx` (hero desktop final: surface 4 blok, eyebrow, heading, quote + kutip, poster kanan, kartu ENJOY, chevron)
+  - Baru: `src/components/HeroTablet.jsx`, `src/components/HeroMobile.jsx` (placeholder sementara, dirombak batch berikutnya)
+  - `src/components/Hero.jsx` jadi pengatur: tampilkan HeroDesktop/Tablet/Mobile sesuai breakpoint
+  - `src/components/Navbar.jsx`: pill putih floating, item Home, tombol Github dengan tilt + hover hitam + bounce
+  - `src/pages/Home.jsx`: rakit Preloader di atas halaman
+- Hasil tes:
+  - `npm run build`: sukses, tidak ada error. Bundle baru terhash (JS ~342 kB, CSS ~18 kB)
+  - Surface: rasio blok hitam/putih/merah/strip diukur dari PNG artboard Full HD (1920×1080), tetap proporsional di 2K/4K karena full-bleed pakai persen dan tinggi 56.25vw
+  - Layout desktop (width >= 1024px): blok warna full nge-fill tanpa margin putih di atas/bawah/kanan/kiri, cocok dengan artboard Bang Rob
+  - Penempatan huruf logo + text di poster kanan, eyebrow, heading, quote, kartu ENJOY, chevron: dipasang lalu di-micro-manage Bang Rob dan di-lock
+  - TiltCard: banner kanan, kartu kuning, tombol Github, tombol Buka Portal mengikuti arah mouse, halus pakai spring
+  - Chevron: hover jadi merah, klik bounce + smooth scroll ke `#koleksi`
+  - Preloader: muncul tiap refresh (sementara, sebelum sessionStorage), logo turun dari atas, tombol fade in, klik membuka tirai dari tengah ke samping dengan garis merah ikut panel, homepage muncul setelahnya
+  - Navbar: item Home baru scroll balik ke `#home` (hero)
+  - Split layout: Hero jadi pengatur breakpoint, tablet (md-lg) dan mobile (<md) pakai file sendiri-sendiri sebagai placeholder, desktop pakai HeroDesktop yang di-lock
+  - Link mati: nol. Semua href menunjuk section yang ada atau URL real
+  - Console: tidak ada error JavaScript
+- Catatan jujur:
+  - Tablet dan mobile MASIH placeholder sederhana (blok warna + judul), belum sesuai artboard `tablet(768x1024).svg` dan `mobile(360x800).svg`. Cek kelengkapan 360/768 baru tuntas setelah batch tablet dan mobile masing-masing
+  - `mascot-enjoy.svg` di-extract dari `desktop(1280x800).svg` artboard Bang Rob, warna dan path diambil persis dari desain vector
+  - Preloader sengaja dibuat tampil tiap refresh supaya mudah di-micro-manage; setelah final bisa dikembalikan ke sekali per sesi (sessionStorage)

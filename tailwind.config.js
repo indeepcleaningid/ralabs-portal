@@ -5,8 +5,9 @@ export default {
     extend: {
       colors: {
         surface: '#E8EEF4',
-        ink: '#1B1B1B',
-        accent: '#D70000',
+        ink: '#1B1818',
+        accent: '#E3222B',
+        sun: '#FFE578',
       },
       fontFamily: {
         sans: ['Comfortaa', 'ui-rounded', 'sans-serif'],

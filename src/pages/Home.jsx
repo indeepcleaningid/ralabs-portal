@@ -1,4 +1,5 @@
 import Navbar from '../components/Navbar.jsx'
+import Preloader from '../components/Preloader.jsx'
 import Hero from '../components/Hero.jsx'
 import Koleksi from '../components/Koleksi.jsx'
 import Tentang from '../components/Tentang.jsx'
@@ -9,6 +10,7 @@ import Footer from '../components/Footer.jsx'
 export default function Home() {
   return (
     <div className="min-h-screen bg-surface font-body text-ink">
+      <Preloader />
       <Navbar />
       <main>
         <Hero />
