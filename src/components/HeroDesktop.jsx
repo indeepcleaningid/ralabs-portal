@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import TiltCard from './TiltCard.jsx'
 
@@ -6,13 +5,6 @@ import TiltCard from './TiltCard.jsx'
 // Layout ini SUDAH DI-LOCK sama Bang Rob. Jangan diubah-ubah kecuali diminta.
 // Kalau mau ubah tablet/mobile, buka HeroTablet / HeroMobile — bukan file ini.
 export default function HeroDesktop({ started }) {
-  const [bounce, setBounce] = useState(false)
-
-  function handleChevronClick() {
-    setBounce(true)
-    setTimeout(() => setBounce(false), 400)
-  }
-
   return (
     <section
       className="relative w-full overflow-hidden bg-white"
@@ -249,27 +241,8 @@ export default function HeroDesktop({ started }) {
         </motion.div>
       </div>
 
-      {/* chevron panah ke bawah. Mulai opacity 0, fade in pas preloader kelar,
-          biar seragam sama elemen hero lain. Hover & bounce tetap jalan di <a>. */}
-      <motion.div
-        className="absolute left-1/2 top-[calc(91%-150px-100px)] z-10 -translate-x-1/2"
-        initial={{ opacity: 0 }}
-        animate={started ? { opacity: 1 } : { opacity: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
-      >
-        <a
-          href="#koleksi"
-          onClick={handleChevronClick}
-          aria-label="Lanjut ke bagian Koleksi"
-          className={`block text-ink transition-colors duration-200 hover:text-accent ${
-            bounce ? 'animate-bounce' : ''
-          }`}
-        >
-          <svg viewBox="0 0 40 30" className="h-[1.75vw] w-[2.45vw]" fill="none" aria-hidden="true">
-            <path d="M4 6 L20 24 L36 6" stroke="currentColor" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </a>
-      </motion.div>
+      {/* chevron panah ke bawah DIHAPUS 16 Okt 2026 (Bang Rob): dirasa ganggu
+          dan nggak perlu. Navigasi ke Koleksi tetap ada di navbar. */}
     </section>
   )
 }

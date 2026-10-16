@@ -85,20 +85,16 @@ export default function Navbar({ started }) {
           started ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <a href="/" className="flex shrink-0 items-center gap-2" aria-label="RaLabs beranda">
+        {/* Logo navbar: lockup gabungan kubus + teks (satu file).
+            Sebelumnya 2 img terpisah (favicon-logo + logo-text, teksnya di-hide <sm).
+            alt dikosongin karena link-nya udah punya aria-label. */}
+        <a href="/" className="flex shrink-0 items-center" aria-label="RaLabs beranda">
           <img
-            src="/images/favicon-logo.webp"
+            src="/images/logo+logotext.webp"
             alt=""
-            width="32"
-            height="40"
+            width="450"
+            height="166"
             className="h-9 w-auto"
-          />
-          <img
-            src="/images/logo-text.webp"
-            alt="RaLabs"
-            width="72"
-            height="20"
-            className="hidden h-5 w-auto sm:block"
           />
         </a>
 
@@ -140,26 +136,48 @@ export default function Navbar({ started }) {
             </a>
           </TiltCard>
 
-          {/* Mobile: tombol buka tutup menu */}
+          {/* Mobile: tombol buka tutup menu.
+              Sengaja BUKAN ikon 3 garis (default paling mainstream): kotak ink
+              + 2 balok putih yang morf jadi X pas kebuka. Kotaknya jadi merah
+              saat terbuka, sejalan sama bahasa "kotak ink = state" yang udah
+              dipakai di nav desktop (item aktif = kotak hitam full-height).
+              🔒 LOCKED sama Bang Rob (16 Okt 2026). */}
           <button
             type="button"
             aria-expanded={open}
             aria-controls="menu-nav"
             aria-label={open ? 'Tutup menu' : 'Buka menu'}
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition hover:text-accent md:hidden"
+            className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition-colors duration-200 md:hidden ${
+              open ? 'bg-accent' : 'bg-ink'
+            }`}
           >
-            <span aria-hidden="true" className="font-display text-2xl leading-none">
-              {open ? '×' : '≡'}
+            <span
+              aria-hidden="true"
+              className="relative flex h-[18px] w-[18px] items-center justify-center"
+            >
+              <span
+                className={`absolute h-[2.5px] w-[18px] rounded-full bg-white transition-transform duration-300 ease-out ${
+                  open ? 'rotate-45' : '-translate-y-[4px]'
+                }`}
+              />
+              <span
+                className={`absolute h-[2.5px] w-[18px] rounded-full bg-white transition-transform duration-300 ease-out ${
+                  open ? '-rotate-45' : 'translate-y-[4px]'
+                }`}
+              />
             </span>
           </button>
         </div>
 
-        {/* Panel menu mobile. Klik link langsung menutup menu. */}
+        {/* Panel menu mobile. Klik link langsung menutup menu.
+            Shadow-nya sengaja shadow biasa (bukan neu-card) biar gak ada halo
+            putih/glow pas panelnya kebuka.
+            🔒 LOCKED sama Bang Rob (16 Okt 2026). */}
         {open && (
           <ul
             id="menu-nav"
-            className="neu-card absolute left-0 right-0 top-full z-50 mt-3 overflow-hidden py-2 md:hidden"
+            className="absolute left-0 right-0 top-full z-50 mt-3 overflow-hidden rounded-[1.25rem] bg-white py-2 shadow-[0_6px_24px_rgba(27,24,24,0.18)] md:hidden"
           >
             {NAV_ITEMS.map((item) => (
               <li key={item.href}>
@@ -172,12 +190,12 @@ export default function Navbar({ started }) {
                 </a>
               </li>
             ))}
-            <li>
+            <li className="px-3 pb-2 pt-1">
               <a
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-11 items-center px-5 text-sm font-bold text-accent transition hover:opacity-90"
+                className="flex min-h-11 items-center justify-center rounded-full bg-accent px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-ink hover:text-white"
               >
                 Github
               </a>

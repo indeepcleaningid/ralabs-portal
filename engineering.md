@@ -294,3 +294,30 @@ Format entri:
   - Keluhan navbar "kadang ilang pas scroll" di desktop baru di-hipotesis penyebabnya (animasi di elemen fixed) lalu diperbaiki, masih PERLU konfirmasi Bang Rob apakah intermitennya benar hilang
   - Quote tablet dilebar sampai 97% layar (keputusan desain Bang Rob) sehingga teksnya nembus blok merah dan tanda kutip mepet pinggir, sudah sesuai permintaan
   - Preloader masih tampil tiap refresh (sengaja, biar gampang micro-manage); issue #7 (hero mobile) masih placeholder, belum dikerjakan
+
+## 16 Okt 2026, Hero mobile rampung (issue #7) lalu DI-LOCK + rapi-rapi preloader dan navbar mobile
+
+- Tanggal: 16 Okt 2026
+- Judul: hero mobile sesuai artboard 360x800 di-micro-manage sampai lock, preloader dan navbar mobile dirapikan, chevron desktop dibuang
+- File yang berubah:
+  - `src/components/HeroMobile.jsx` (rombak dari nol: surface 4 band horisontal tinggi 222.22vw, eyebrow putih, headline pill merah, kartu logo, quote 2 paragraf plus 2 kutip hitam, kartu ENJOY. Sekarang DI-LOCK)
+  - `src/components/Hero.jsx` (prop `started` diteruskan ke `HeroMobile`, sebelumnya tidak dikirim sehingga animasi pasca preloader tidak jalan di mobile)
+  - `src/components/Preloader.jsx` (ukuran khusus mobile lewat variant `max-md:`, LOCKED)
+  - `src/components/Navbar.jsx` (logo ganti lockup `logo+logotext.webp`, panel mobile dibuang halo `neu-card`, tombol Github jadi pill merah, hamburger custom. Bagian mobile LOCKED)
+  - `src/components/HeroDesktop.jsx` (chevron dibuang, dead code `useState`, `bounce`, dan `handleChevronClick` ikut dibersihkan)
+  - Hasil build dicopy ke root: `index.html`, `assets/`, `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Hasil tes:
+  - `npm run build`: sukses, 463 modul, 1.84 detik. Bundle `main-CtxWOgkj.js` 356.48 kB dan `main-DWaNRq2f.css` 27.16 kB
+  - md5 bundle root sama persis dengan `dist/assets/`: JS `c44db26748cda04e3d6b9651c2eb75d6`, CSS `c43a243666ea27e4c0adf92ed4037882`. `index.html` root menunjuk bundle yang benar-benar ada, casing dicek
+  - Isi bundle terverifikasi memuat kode baru: `logo+logotext.webp`, `max-md:w-[60vw]`, `clamp(21px,6vw,30px)`, `max-md:whitespace-nowrap` semuanya ada
+  - Hero mobile diukur pixel di 360x800: surface 4 band, headline pill, kartu logo, quote, dan kartu ENJOY terender di posisi hasil micro-manage
+  - Preloader mobile diperbaiki dengan bukti ukur: logo 342x342px jadi 214x214px, tombol 358x182px dengan teks terpecah 2 baris jadi 228x66px satu baris, lalu dikecilin 20 persen jadi 182x54px
+  - Preloader desktop dan tablet TIDAK berubah: screenshot 1440x900 dan 900x1000 sebelum vs sesudah, beda pixel NOL di keduanya
+  - Chevron desktop: dump DOM di 1440x900, `Lanjut ke bagian Koleksi` dan svg `viewBox="0 0 40 30"` sama-sama 0 kejadian, sementara `id="koleksi"` tetap 1 sehingga link nav Koleksi tetap punya tujuan
+  - Syntax JSX 5 file yang berubah: lolos esbuild
+  - Kontras: tidak ada pasangan warna baru. Balok putih di kotak ink dan di pill merah, keduanya kontras tinggi
+  - Link mati: nol. Tujuan href sama seperti batch sebelumnya, dan hapus chevron tidak menghilangkan tujuan apa pun
+- Catatan jujur:
+  - Animasi morf hamburger (2 balok jadi X) dan buka tutup panel mobile BELUM diuji klik sendiri. Headless Chrome tidak bisa klik, dan navbar baru tampil setelah tombol "Buka Portal" di preloader diklik. Jalur state baru dicek lewat code inspection, perlu konfirmasi Bang Rob
+  - Preloader masih tampil tiap refresh (sengaja, biar gampang micro-manage)
+  - Issue #7 (hero mobile) ditutup setelah PR ini merge dan production tervalidasi
