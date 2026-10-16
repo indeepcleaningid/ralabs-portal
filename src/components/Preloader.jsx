@@ -6,7 +6,7 @@ import TiltCard from './TiltCard.jsx'
 // - Tombol muncul pelan (fade in) setelah logo mendarat.
 // - Pas tombol diklik, tirai (2 panel) kebuka ke samping, homepage muncul.
 // SEMENTARA tampil tiap refresh biar gampang di-micro-manage.
-export default function Preloader() {
+export default function Preloader({ onDone }) {
   const [done, setDone] = useState(false)
   const [opening, setOpening] = useState(false)
   // Logo mulai di atas layar (di luar), lalu turun ke tengah pas mount.
@@ -28,7 +28,10 @@ export default function Preloader() {
   function handleOpen() {
     setOpening(true)
     // Tunggu animasi tirai selesai (2 panel geser ke samping), baru hapus overlay.
-    setTimeout(() => setDone(true), 1200)
+    setTimeout(() => {
+      setDone(true)
+      onDone?.()
+    }, 1200)
   }
 
   if (done) return null
@@ -73,11 +76,13 @@ export default function Preloader() {
           className="transition-transform duration-[900ms] ease-out"
           style={{ transform: landed ? 'translateY(0)' : 'translateY(-60vh)' }}
         >
-          <img
-            src="/images/logo+logotext.webp"
-            alt="RaLabs"
-            className="w-[220px] max-w-[60vw]"
-          />
+          <TiltCard maxTilt={8}>
+            <img
+              src="/images/logo-preload.webp"
+              alt="RaLabs"
+              className="w-[396px] max-w-[95vw]"
+            />
+          </TiltCard>
         </div>
 
         <span className="inline-flex">
@@ -85,7 +90,7 @@ export default function Preloader() {
             <button
               type="button"
               onClick={handleOpen}
-              className="animate-[fadeIn_0.8s_ease-out_0.9s_both] rounded-full bg-accent px-8 py-3 font-display text-base font-bold text-white transition-colors duration-200 hover:bg-white hover:text-ink"
+              className="animate-[fadeIn_0.8s_ease-out_0.9s_both] rounded-full bg-accent px-[3.24rem] py-[1.215rem] font-display text-[48px] font-black text-white transition-colors duration-200 hover:bg-white hover:text-ink [-webkit-text-stroke:0.12vw_currentColor]"
             >
               Buka Portal
             </button>

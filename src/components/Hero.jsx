@@ -7,11 +7,11 @@ import HeroMobile from './HeroMobile.jsx'
 // - Tablet   : md sampai lg -> HeroTablet (belum dibuat, nyusul)
 // - Mobile   : di bawah md  -> HeroMobile  (belum dibuat, nyusul)
 // Penting: tiap versi file sendiri-sendiri, jadi ngurus satu gak ngerusak yang lain.
-export default function Hero() {
+export default function Hero({ started }) {
   return (
     <>
       <div className="hidden lg:block">
-        <HeroDesktop />
+        <HeroDesktop started={started} />
       </div>
       <div className="hidden md:block lg:hidden">
         <HeroTablet />
