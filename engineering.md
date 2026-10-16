@@ -232,3 +232,21 @@ Format entri:
   - `index.html` root nunjuk `/assets/main-DPZivlyb.js` + `/assets/main-CHyzDmd-.css` yang beneran ada di folder assets
 - Catatan jujur:
   - Verifikasi output live (`ralabs.my.id`) dilakukan batch ini: masih bundle lama karena hPanel belum narik PR #4 yang baru merge. Setelah PR ini merge, cek ulang bundle di production.
+
+## 16 Okt 2026, Validasi produksi + aturan hasil build + issue tablet/mobile
+
+- Tanggal: 16 Okt 2026
+- Judul: validasi production PR #4/#5 dinyatakan OK, contributing.md dapat aturan hasil build wajib ke root, buat 2 issue redesign hero tablet & mobile
+- File yang berubah:
+  - `contributing.md`: tambah bagian "Hasil build wajib ikut ter-commit di root repo" (langkah copy `dist/` ke root, cek case-sensitive filename, verifikasi setelah merge)
+  - Tidak ada perubahan source; murni perbaikan aturan kerja supaya masalah "PR merge tapi hPanel serve versi lama" tidak terulang
+- Hasil tes / validasi:
+  - Production `https://ralabs.my.id/` dinyatakan OK: bundle JS `main-DPZIVlyb.js` (V kapital) terbukti 200, md5 `d06a9b27450bc6afd28a450e684c0f31` = persis build lokal `dist/`, isi "Buka Portal", "Bengkel Kode", "ENJOY!!" ada
+  - Render live lewat headless Chrome: DOM penuh, navbar + hero + preloader semua ke-render, mascot + favicon + logo live 200
+  - Sesuai dokumentasi resmi Hostinger (artikel "How to deploy a Git repository in Hostinger"): auto-deploy menarik ROOT repo branch `main` ke `public_html`, tanpa build oleh server
+  - Catatan cek: evaluasi awal sempat tampak "404" pada bundle JS karena salah ketik casing (v kecil vs V kapital) pada perintah cek, bukan masalah deploy
+- Issue baru:
+  - #6: Redesign Hero Tablet (768x1024) sesuai artboard
+  - #7: Redesign Hero Mobile (360x800) sesuai artboard
+- Catatan jujur:
+  - Tablet dan mobile masih placeholder di `HeroTablet.jsx` / `HeroMobile.jsx`, menunggu dikerjakan lewat issue #6 dan #7

@@ -10,6 +10,22 @@ Repo ini auto-deploy ke shared hosting Hostinger. Merge ke `main` langsung tayan
 - Tunggu review Bang Rob, lalu merge manual lewat GitHub. Pilihan squash atau merge biasa terserah Bang Rob.
 - Setelah merge, cek hPanel Hostinger ikut menarik `main` dan site ikut ter-update.
 
+## Hasil build wajib ikut ter-commit di root repo
+
+hPanel auto-deploy menarik isi **folder root repo** (`index.html`, `assets/`, `images/`, dan file statis lain) ke server. Hostinger **tidak menjalankan build** — jadi kalau source berubah, hasil build-nya harus dipindah ke root dan ikut di-commit, kalau tidak PR merge tetap menayangkan versi lama.
+
+Urutan wajib untuk tiap PR yang mengubah source:
+
+1. `npm run build` sampai sukses (output ada di `dist/`).
+2. Copy hasil build ke root:
+   - `cp dist/entries/index.html index.html`
+   - `cp dist/assets/*.js dist/assets/*.css assets/` (hapus dulu bundle lama di `assets/`)
+   - `cp -r dist/images/* images/`
+   - `cp dist/404.html dist/robots.txt dist/sitemap.xml dist/humans.txt .`
+3. Pastikan `index.html` di root menunjuk bundle yang **benar-benar ada** di `assets/` (nama file case-sensitive, cek huruf besar/kecilnya).
+4. Commit semua perubahan termasuk hasil build. Jangan `.gitignore` hasil build di root.
+5. Setelah merge, verifikasi di production: bundle yang diload sesuai hash build lokal. `dist/` tetap boleh di-gitignore (itu hasil antara, bukan yang ditarik hPanel).
+
 ## Isi deskripsi PR
 
 Tulis apa yang berubah dan bukti tesnya:
