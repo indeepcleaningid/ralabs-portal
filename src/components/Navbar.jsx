@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import TiltCard from './TiltCard.jsx'
 
 // Link nav diisi per batch begitu section-nya benar benar ada.
@@ -16,7 +15,7 @@ const GITHUB_URL = 'https://github.com/indeepcleaningid/ralabs-portal'
 
 export default function Navbar({ started }) {
   const [open, setOpen] = useState(false)
-  const [active, setActive] = useState('koleksi')
+  const [active, setActive] = useState('home')
   const [ghBounce, setGhBounce] = useState(false)
 
   function handleGithubClick() {
@@ -24,27 +23,47 @@ export default function Navbar({ started }) {
     setTimeout(() => setGhBounce(false), 400)
   }
 
-  // Scroll-spy: catat section mana yang lagi kelihatan, buat kotak aktif.
-  // Section hero di atas "koleksi"; kalau belum ada yang masuk viewport, tetap "koleksi".
+  // Scroll-spy: section aktif = yang paling akhir sudah lewat garis ~40% viewport.
+  // #home dipegang satu pembungkus di Hero.jsx (bukan tiap varian hero),
+  // biar gak ada ID kembar dan elemen aktif selalu ada di semua breakpoint.
+  // Kasus khusus: kalau udah mentok bawah halaman, paksa section terakhir aktif
+  // (biar section pendek kayak Kontak tetap kena walau gak nyampe garis).
   useEffect(() => {
     const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(
       Boolean,
     )
     if (sections.length === 0) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        // Pilih entry yang paling banyak terlihat.
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) setActive(visible.target.id)
-      },
-      { rootMargin: '-40% 0px -55% 0px', threshold: [0, 0.25, 0.5, 1] },
-    )
+    let frame = 0
 
-    sections.forEach((section) => observer.observe(section))
-    return () => observer.disconnect()
+    function update() {
+      frame = 0
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
+      if (window.scrollY >= maxScroll - 2) {
+        setActive(sections[sections.length - 1].id)
+        return
+      }
+
+      const line = window.innerHeight * 0.4
+      let current = sections[0].id
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top <= line) current = section.id
+      }
+      setActive(current)
+    }
+
+    function onScroll() {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (frame) cancelAnimationFrame(frame)
+    }
   }, [])
 
   // Escape menutup menu, supaya user keyboard tidak kesulitan (plan 5.1).
@@ -60,13 +79,12 @@ export default function Navbar({ started }) {
   }, [open])
 
   return (
-    <motion.header
-      className="pointer-events-none fixed inset-x-0 top-0 z-50"
-      initial={{ opacity: 0 }}
-      animate={started ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.8, ease: 'easeOut' }}
-    >
-      <nav className="pointer-events-auto relative mx-auto mt-4 flex h-[52px] max-w-6xl items-center justify-between rounded-full bg-white pl-5 pr-2 shadow-[0_6px_24px_rgba(27,24,24,0.18)] sm:pl-8">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
+      <nav
+        className={`pointer-events-auto relative mx-auto mt-4 flex h-[52px] w-[calc(100%-50px)] max-w-[calc(1152px-50px)] items-center justify-between rounded-full bg-white pl-5 pr-2 shadow-[0_6px_24px_rgba(27,24,24,0.18)] transition-opacity duration-[800ms] ease-out sm:pl-8 ${
+          started ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <a href="/" className="flex shrink-0 items-center gap-2" aria-label="RaLabs beranda">
           <img
             src="/images/favicon-logo.webp"
@@ -167,6 +185,6 @@ export default function Navbar({ started }) {
           </ul>
         )}
       </nav>
-    </motion.header>
+    </header>
   )
 }

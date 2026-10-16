@@ -272,3 +272,25 @@ Format entri:
 - Catatan jujur:
   - Preloader masih tampil tiap refresh (sengaja, biar gampang micro-manage); belum dikembalikan ke sekali per sesi (sessionStorage)
   - Issue #6 (tablet) dan #7 (mobile) masih pending, belum dikerjakan di batch ini
+
+## 16 Okt 2026, Final micro-manage hero tablet + fix navbar scroll-spy
+
+- Tanggal: 16 Okt 2026
+- Judul: hero tablet rampung di-micro-manage lalu DI-LOCK (issue #6), fix ID `#home` kembar + scroll-spy navbar, minor tweak desktop
+- File yang berubah:
+  - `src/components/HeroTablet.jsx` (sekarang DI-LOCK): eyebrow dikecilin 20% + posisi disetel; tinggi pill headline diatur; quote dipecah jadi 2 paragraf; font quote disetel sampai stabil di `1.8vw`; group quote digeser center surface (50%) lalu turun total 250px; area quote dilebar dari 61% ke 97%; tanda kutip kiri/kanan digeser; tanda kutip kanan diganti putih + stroke hitam; kartu logo gede 10% + turun 10px; kartu ENJOY gede 20% + naik 20px
+  - `src/components/Hero.jsx`: ketiga hero dibungkus SATU `<section id="home">`
+  - `src/components/HeroDesktop.jsx`, `src/components/HeroMobile.jsx`: buang `id="home"` (penyebab ID kembar)
+  - `src/components/Navbar.jsx`: scroll-spy diganti dari IntersectionObserver ke scroll-based (garis 40% + override kalau mentok bawah halaman); state awal `home`; animasi fade dipindah dari `motion.header` (fixed) ke `<nav>` dalam pakai CSS transition
+  - `src/components/HeroDesktop.jsx`: minor, headline turun 10px dan kartu logo turun 15px
+  - Hasil build dicopy ke root: `index.html`, `assets/` (bundle lama dibersihkan dulu), `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Hasil tes:
+  - `npm run build`: sukses, 463 modul, 1.61 detik. Bundle `main-C7edK_ok.js` 351.52 kB dan `main-mYormn_k.css` 22.93 kB
+  - md5 bundle root sama persis dengan `dist/assets/` (JS `c25647d8fdb8377d176555244807be92`), `index.html` root menunjuk bundle yang benar-benar ada (nama case-sensitive dicek)
+  - Fix navbar: dulu ada TIGA elemen `id="home"` kembar (HeroDesktop/Tablet/Mobile, karena ketiganya ada di DOM, dua di antaranya `display:none`). `getElementById('home')` cuma nangkap yang pertama, jadi di tablet/mobile elemen itu hidden dan section Home tidak pernah kena. Sekarang `#home` cuma satu, yaitu pembungkus di `Hero.jsx`
+  - Scroll-spy: dulu pakai band tipis 5% (`rootMargin -40%/-55%`) sehingga section Kontak (pendek dan di paling bawah) tidak pernah masuk band. Sekarang pakai garis 40% viewport, plus kalau sudah mentok bawah halaman section terakhir dipaksa aktif
+  - Navbar fade: dulu animasi `opacity` ditempel di elemen `fixed` (`motion.header`), yang di Chrome rawan gagal repaint saat scroll. Sekarang fade dipasang di `<nav>` dalam lewat CSS transition
+- Catatan jujur:
+  - Keluhan navbar "kadang ilang pas scroll" di desktop baru di-hipotesis penyebabnya (animasi di elemen fixed) lalu diperbaiki, masih PERLU konfirmasi Bang Rob apakah intermitennya benar hilang
+  - Quote tablet dilebar sampai 97% layar (keputusan desain Bang Rob) sehingga teksnya nembus blok merah dan tanda kutip mepet pinggir, sudah sesuai permintaan
+  - Preloader masih tampil tiap refresh (sengaja, biar gampang micro-manage); issue #7 (hero mobile) masih placeholder, belum dikerjakan

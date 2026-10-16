@@ -4,7 +4,7 @@
 // Jangan sentuh HeroDesktop / HeroTablet pas ngerjain ini.
 export default function HeroMobile() {
   return (
-    <section id="home" className="relative w-full overflow-hidden bg-white" style={{ height: '56.25vw' }}>
+    <section className="relative w-full overflow-hidden bg-white" style={{ height: '56.25vw' }}>
       {/* blok kiri-atas: hitam */}
       <div className="absolute left-0 top-0 h-[45%] w-[60%] bg-ink" />
       {/* blok kiri-bawah: putih */}
