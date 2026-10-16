@@ -213,3 +213,22 @@ Format entri:
   - Tablet dan mobile MASIH placeholder sederhana (blok warna + judul), belum sesuai artboard `tablet(768x1024).svg` dan `mobile(360x800).svg`. Cek kelengkapan 360/768 baru tuntas setelah batch tablet dan mobile masing-masing
   - `mascot-enjoy.svg` di-extract dari `desktop(1280x800).svg` artboard Bang Rob, warna dan path diambil persis dari desain vector
   - Preloader sengaja dibuat tampil tiap refresh supaya mudah di-micro-manage; setelah final bisa dikembalikan ke sekali per sesi (sessionStorage)
+
+## 16 Okt 2026, Fix artefak build untuk deploy hPanel
+
+- Tanggal: 16 Okt 2026
+- Judul: hasil build dipindah ke root repo supaya hPanel narik versi terbaru
+- File yang berubah:
+  - `index.html` (root): kini menunjuk bundle baru `main-DPZivlyb.js` + `main-CHyzDmd-.css`
+  - `assets/`: bundle lama `main-BI1AvY-B.js` + `main-D1N9zIu4.css` dihapus, bundle baru hasil build PR #4 masuk
+  - `images/mascot-enjoy.svg` (root): maskot ikut ter-copy dari `dist/images/`
+  - `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt` (root): disamakan dengan hasil build
+- Kenapa perlu:
+  - Auto-deploy hPanel menarik file dari repo `main` (root folder), bukan dari `dist/` (yang di-gitignore).
+  - PR #4 cuma meng-commit source (`src/`, `public/`), hasil build belum ikut masuk repo. Hasilnya live tetap menyajikan bundle lama walau PR sudah merge.
+- Hasil tes:
+  - `md5` bundle root sama persis dengan bundle `dist/assets/` (d06a9b27450bc6afd28a450e684c0f31)
+  - Isi bundle terverifikasi memuat kode baru: string “Buka Portal” dan “Bengkel Kode” ada di bundle
+  - `index.html` root nunjuk `/assets/main-DPZivlyb.js` + `/assets/main-CHyzDmd-.css` yang beneran ada di folder assets
+- Catatan jujur:
+  - Verifikasi output live (`ralabs.my.id`) dilakukan batch ini: masih bundle lama karena hPanel belum narik PR #4 yang baru merge. Setelah PR ini merge, cek ulang bundle di production.
