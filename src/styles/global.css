@@ -160,6 +160,23 @@ html[data-theme='gelap'] {
     }
   }
 
+  /* Shadow headline khusus tema terang: soft tipis ngambang.
+     Pakai filter drop-shadow (bukan text-shadow) karena isi huruf
+     transparan (background-clip: text). text-shadow biasa bakal bocor
+     jadi kotak di belakang huruf. Ukuran pakai em supaya ngikut
+     besar headline 9vw. Tema gelap dimatikan (filter: none).
+     Opacity 0.45 karena background hero di belakang headline itu
+     gelap pekat (radial pojok kanan atas), shadow tipis ketelen. */
+  .teks-gradasi,
+  .teks-aksen {
+    filter: drop-shadow(0 0.04em 0.06em rgba(12, 12, 12, 0.45));
+  }
+
+  html[data-theme='gelap'] .teks-gradasi,
+  html[data-theme='gelap'] .teks-aksen {
+    filter: none;
+  }
+
   /* Baris isi di bawah 80 karakter. */
   .isi {
     max-width: 64ch;
@@ -198,6 +215,13 @@ html[data-theme='gelap'] {
    Nilai ini hasil tuning Bang Rob: pekat di pojok, jangkauan jauh melewati
    tengah layar, hilang total tanpa tepi. JANGAN diubah tanpa izin. */
 .hero-section {
+  /* Full-bleed ke belakang navbar: section ditarik naik 84px (tinggi navbar)
+     di bawah header sticky yang transparan, padding-top 84px balikin posisi
+     konten. Background radial ikut naik jadi nyambung mulus tanpa seam.
+     min-height 100svh (bukan calc) karena padding sudah termasuk di dalamnya,
+     area konten tetap 100svh - 84px sama kayak sebelumnya. */
+  margin-top: -84px;
+  padding-top: 84px;
   background-color: var(--bidang);
   background-image: radial-gradient(
     ellipse 165% 150% at 100% 0%,
@@ -216,12 +240,32 @@ html[data-theme='gelap'] {
    memancarkan terang (versi normal dari efek yang sama). */
 html[data-theme='gelap'] .hero-section {
   background-image: radial-gradient(
-    circle at 100% 0%,
-    rgba(248, 250, 252, 0.14) 0%,
-    rgba(248, 250, 252, 0.09) 15%,
-    rgba(248, 250, 252, 0.04) 35%,
-    rgba(248, 250, 252, 0.01) 55%,
-    rgba(248, 250, 252, 0) 75%
+    ellipse 165% 150% at 100% 0%,
+    rgba(248, 250, 252, 0.28) 0%,
+    rgba(248, 250, 252, 0.2) 20%,
+    rgba(248, 250, 252, 0.13) 42%,
+    rgba(248, 250, 252, 0.07) 62%,
+    rgba(248, 250, 252, 0.03) 80%,
+    rgba(248, 250, 252, 0.01) 92%,
+    rgba(248, 250, 252, 0) 100%
+  );
+}
+
+/* Surface gerbang: pakai surface dark mode hero (radial terang pojok kanan atas).
+   Gerbang selalu gelap (bg tinta) di dua tema, jadi gradientnya fix versi gelap,
+   tidak ikut toggle tema. Class dipisah dari .hero-section supaya tuning hero
+   (margin -84px, padding 84px) tidak bocor ke gerbang yang fixed fullscreen. */
+.gerbang-surface {
+  background-color: #0c0c0c;
+  background-image: radial-gradient(
+    ellipse 165% 150% at 100% 0%,
+    rgba(248, 250, 252, 0.28) 0%,
+    rgba(248, 250, 252, 0.2) 20%,
+    rgba(248, 250, 252, 0.13) 42%,
+    rgba(248, 250, 252, 0.07) 62%,
+    rgba(248, 250, 252, 0.03) 80%,
+    rgba(248, 250, 252, 0.01) 92%,
+    rgba(248, 250, 252, 0) 100%
   );
 }
 

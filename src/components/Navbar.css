@@ -8,11 +8,11 @@ html {
   scroll-padding-top: 92px;
 }
 
-/* Pita navbar: bidang selebar layar, sedikit lebih tinggi dari bar CardNav.
-   Isinya cuma CardNav (60px) + padding 12px atas-bawah = 84px.
-   Terang -> --lawan-bidang = tinta. Gelap -> --lawan-bidang = kertas. */
+/* Pita navbar: transparan, ngintip background hero di belakangnya.
+   Padding 12px atas-bawah dipertahankan supaya tinggi total tetap 84px
+   (CardNav 60px + 12 + 12) dan min-h hero calc(100svh - 84px) tetap pas. */
 .navbar-ralabs .pita-navbar {
-  background: var(--lawan-bidang);
+  background: transparent;
   padding: 12px 0;
 }
 

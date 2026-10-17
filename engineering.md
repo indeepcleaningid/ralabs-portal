@@ -492,3 +492,27 @@ Format entri:
   - Stroke `0.012em` memakai `-webkit-text-stroke` yang bukan properti standar. Chrome, Edge, Safari, dan Firefox mendukungnya; kalau tidak didukung, huruf hanya kehilangan penebalan, tidak rusak
   - Bundle JS tetap 957.41 kB (gzip 272.68 kB), belum di-code-split. GLB tetap 1.52 MB
   - `plan-prd/` masih di-gitignore dan belum diperbarui untuk batch ini
+
+## 18 Okt 2026, Hero Anton + gerbang GLB + surface full-bleed
+
+- Tanggal: 18 Okt 2026
+- Judul PR: headline Anton 5vw + shadow light, gerbang pakai GLB hero, surface full sampai navbar
+- File yang berubah:
+  - `src/components/Hero.jsx` (font Anton, mobile 9vw + pt-16, desktop 5vw, full-bleed min-h 100svh, FadeIn headline animateOnMount)
+  - `src/components/FadeIn.jsx` (prop baru animateOnMount buat above-fold Firefox)
+  - `src/components/Gerbang.jsx` (Kubus geometry ganti Logo3D GLB 420px, bg-tinta ganti gerbang-surface)
+  - `src/components/Navbar.css` (pita-navbar transparan, strip hitam dicabut)
+  - `src/styles/global.css` (shadow drop-shadow light, dark glow 0.28 ellipse full, gerbang-surface baru, hero margin -84px padding 84px)
+  - `tailwind.config.js` (font-headline Anton depan, Archivo fallback)
+  - `entries/index.html` (Google Fonts tambah Anton)
+  - Hasil build dicopy ke root: `index.html`, `assets/main-BI2d8usC.css`, `assets/main-Cuf_KCSN.js`, `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Hasil tes:
+  - `npm run build`: sukses, 6498 modul, 6.17 detik. CSS `main-BI2d8usC.css` 27.12 kB, JS `main-Cuf_KCSN.js` 955.15 kB (gzip 271.65 kB). Warning chunk > 500 kB masih ada (three + framer-motion, belum code-split)
+  - `index.html` root menunjuk `assets/main-Cuf_KCSN.js` dan `assets/main-BI2d8usC.css` yang benar-benar ada. Bundle lama `main-SNDfDEcU.js`/`main-YTS0Qg2x.css` sudah dihapus
+  - Dev server 5015 (server Bang Rob): headline Anton tampil, shadow light kelihatan, mobile 9vw + pt-16, Firefox responsive headline tidak blank, gerbang GLB 420px + surface glow, navbar tanpa strip, hero full sampai atas
+  - Kontras: tinta/kertas 18.70:1, merah di atas kertas 5.16:1 (tidak berubah dari batch lalu)
+- Catatan jujur:
+  - Verifikasi render (screenshot + curl DOM) belum gue jalankan sendiri karena dev server dipegang Bang Rob. Semua cek visual di atas hasil konfirmasi Bang Rob di dev servernya
+  - `Kubus.jsx` sekarang tidak dipakai siapa-siapa (gerbang pindah ke Logo3D). Belum gue hapus, nunggu arahan Bang Rob mau disimpan atau dibuang
+  - Shadow headline cuma di light theme (dark dimatikan filter none). Opacity 0.45 + blur 0.06em hasil tuning bareng Bang Rob biar tidak ketelen radial gelap
+  - Satu file GLB dipakai dua section (hero + gerbang), browser cache sekali. Tidak jadi clone, hemat 1.5MB
