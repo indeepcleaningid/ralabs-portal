@@ -8,16 +8,17 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className="hero-section relative flex min-h-[calc(100svh_-_84px)] flex-col overflow-x-clip text-teks"
+      className="hero-section relative flex min-h-[100svh] flex-col overflow-x-clip text-teks"
     >
-      {/* Headline: satu baris. Spacing huruf default (tanpa tracking negatif).
-          Ukuran 9vw dibandingkan lebar teks "HERE'S RALABS" di Archivo 900
-          (lebar per-em lebih besar dari Bebas Neue). Naik/turun-nya lewat
-          angka vw ini, min & max ikut diskalakan. */}
-      <div className="relative z-20 overflow-hidden px-[1.5vw] pt-6 sm:pt-4">
-        <FadeIn delay={0.1} y={40}>
-          {/* Archivo variable: weight 900 = paling tebal. */}
-          <h1 className="text-center uppercase whitespace-nowrap font-headline font-black text-[clamp(1.8rem,9vw,22rem)] leading-none tracking-normal">
+      {/* Headline: satu baris. Anton condensed, ukuran 5vw (turun dari 7vw).
+          whitespace-nowrap jaga 1 baris. Naik/turun-nya lewat angka vw ini,
+          min & max ikut diskalakan. */}
+      <div className="relative z-20 overflow-hidden px-[1.5vw] pt-16 sm:pt-4">
+        {/* animateOnMount: headline above-fold, whileInView nggak nembak di Firefox. */}
+        <FadeIn delay={0.1} y={40} animateOnMount>
+          {/* Anton cuma 1 weight (400), jadi tanpa font-black.
+              Mobile 9vw biar ramping, sm ke atas balik 5vw. */}
+          <h1 className="text-center uppercase whitespace-nowrap font-headline text-[clamp(1.6rem,9vw,3.2rem)] sm:text-[clamp(1rem,5vw,12rem)] leading-none tracking-normal">
             <span className="teks-gradasi">HERE&apos;S </span><span className="teks-aksen">RA</span><span className="teks-gradasi">LABS</span>
           </h1>
         </FadeIn>
