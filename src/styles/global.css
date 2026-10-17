@@ -16,6 +16,9 @@
   /* Bidang lawan dipakai pita Collection dan Footer. */
   --lawan-bidang: #0c0c0c;
   --lawan-teks: #f8fafc;
+  /* Gradasi teks judul: dua ujungnya tetap turunan tinta, cuma kecerahannya beda. */
+  --grad-atas: rgba(12, 12, 12, 0.4);
+  --grad-bawah: #0c0c0c;
   color-scheme: light;
 }
 
@@ -26,6 +29,8 @@ html[data-theme='gelap'] {
   --garis: #f8fafc;
   --lawan-bidang: #f8fafc;
   --lawan-teks: #0c0c0c;
+  --grad-atas: rgba(248, 250, 252, 0.35);
+  --grad-bawah: #f8fafc;
   color-scheme: dark;
 }
 
@@ -71,6 +76,43 @@ html[data-theme='gelap'] {
   .judul-bagian {
     font-size: clamp(1.5rem, 2.8vw, 2.4rem);
     line-height: 1.15;
+  }
+
+  /* Teks judul gradasi (hero). Warna dasarnya teks biasa; baru jadi gradasi
+     kalau browser-nya paham background-clip: text, jadi tidak ada judul hilang. */
+  .teks-gradasi {
+    color: var(--teks);
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .teks-gradasi {
+      background-image: linear-gradient(180deg, var(--grad-atas), var(--grad-bawah));
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
+  }
+
+  /* Bagian aksen (RA di RALABS): gradasi merah + shadow tipis tinta.
+     Ukuran/weight/tracking ikut h1; cuma warna & bayangan yang beda. */
+  .teks-aksen {
+    /* Tracking negatif bikin huruf L menempel ke kaki A. Naikkan RA satu
+       lapis supaya merah A tetap penuh, tanpa mengubah tracking/ukuran. */
+    position: relative;
+    z-index: 1;
+    color: var(--merah);
+    text-shadow: 0 0.03em 0.05em rgba(110, 0, 0, 0.3);
+  }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .teks-aksen {
+      background-image: linear-gradient(180deg, #a00000, #d70000);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+    }
   }
 
   /* Baris isi di bawah 80 karakter. */
