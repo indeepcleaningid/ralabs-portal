@@ -1,8 +1,9 @@
 // ===== HERO MOBILE (di bawah md, kurang dari 768px) =====
 // 🔒 LOCKED sama Bang Rob (16 Okt 2026). Jangan diubah kecuali diminta eksplisit.
 // Layout ini mengikuti artboard mobile(360x800).svg.
-// Surface-nya 4 band HORISONTAL (beda dari tablet yang vertikal, tapi isinya sama):
-//   hitam 0-18.75% -> putih 18.75-56.25% -> merah 56.25-94.375% -> strip hitam 94.375-100%
+// Surface-nya 3 band HORISONTAL (beda dari tablet yang vertikal, tapi isinya sama):
+//   hitam 0-18.75% -> putih 18.75-56.25% -> merah 56.25-94.375%
+//   (strip hitam bawah 94.375-100% dihapus 16 Okt 2026, diminta Bang Rob)
 // Rasio artboard 360:800, jadi tinggi section = 222.22vw (800/360).
 // Elemen: eyebrow (dot putih + teks putih), headline pill merah, kartu logo,
 // quote 2 paragraf + 2 tanda kutip hitam, kartu ENJOY kuning. Tanpa chevron.
@@ -29,8 +30,8 @@ export default function HeroMobile({ started }) {
         <div className="absolute left-0 top-[18.75%] h-[37.5%] w-full bg-white" />
         {/* band merah (56.25-94.375%) */}
         <div className="absolute left-0 top-[56.25%] h-[38.125%] w-full bg-accent" />
-        {/* strip bawah: hitam (94.375-100%) */}
-        <div className="absolute left-0 top-[94.375%] h-[5.625%] w-full bg-ink" />
+        {/* 16 Okt 2026: strip hitam bawah DIHAPUS (diminta Bang Rob, keliatan ganggu).
+            Area 94.375-100% sekarang ikut putih dari bg-white section. */}
       </motion.div>
 
       {/* eyebrow: dot putih + teks putih, di tengah band hitam (center y 10.625%).

@@ -81,4 +81,104 @@
     font-family: 'JetBrains Mono', ui-monospace, monospace;
     font-size: 0.75rem;
   }
+
+  /* ===== HERO AUTO-FIT (16 Okt 2026) =====
+     Masalah: tinggi hero dikunci ke LEBAR layar (56.25vw), jadi di rasio layar
+     selain 16:9 hero nggak pas 1 layar. Ukurannya: 16:10 kurang 90-120px,
+     5:4 kurang 304px, ultrawide 21:9 kelebihan 495px (ekor hero lewat fold).
+     Solusi 2 lapis:
+       stage = pembungkus luar, tingginya SELALU 1 layar (100dvh), clipping,
+               dan yang ngatur center.
+       frame = kotak rasio artboard (16:9) yang di-contain + di-center di dalam
+               stage. Ini yang jadi patokan semua posisi % konten, jadi nggak
+               ada angka yang geser.
+     Surface (band warna) tetap di dalam frame, tapi tepi luarnya ditarik keluar
+     lewat --bleed-x / --bleed-y biar nutup sisa stage. Hasilnya batas antar band
+     TETAP di posisi yang sama relatif ke konten, cuma bidangnya yang melar.
+     Konten di dalam frame pakai cqw (1cqw = 1% lebar frame). Di rasio acuan
+     (1920x1080) lebar frame = lebar layar, jadi 1cqw = 1vw = hasil sama persis.
+     Deklarasi di bawah ini = perilaku lama, dipakai browser yang belum kenal
+     dvh / cqw (nggak rusak, cuma nggak ikut auto-fit). */
+  .hero-stage-desktop {
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #ffffff;
+    height: 56.25vw;
+  }
+
+  .hero-frame-desktop {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    /* --geser-x / --geser-y = geser grup isi bawah hero desktop (quote + kartu +
+       ENJOY) sebagai % lebar / tinggi frame. Eyebrow & headline SENGAJA di luar
+       grup: eyebrow harus tetap center di surface (50%) dan headline harus tetap
+       di posisi atas. Grup ini yang digeser biar isi area bawah naik/turun tanpa
+       ngubah dua elemen itu. --geser-x dibiarin 0 karena konten balik ke kolom
+       kiri (29.56%); kalau mau imbangin space kiri/kanan, angka ini yang diubah. */
+    --geser-x: 0%;
+    --geser-y: 13.88%;
+    /* --u = 1px di artboard desktop (lebar 1920), tapi ikut skala frame.
+       1cqw = 1% lebar frame, jadi 1px artboard = (1/1920) lebar frame = 1cqw/19.2.
+       Dipakai semua offset yang dulu dipatok px. Di lebar frame 1920 nilainya
+       persis 1px, jadi tampilan 1920x1080 nol perubahan. */
+    --u: calc(1cqw / 19.2);
+    /* sisa ruang di luar frame yang harus ditutup surface (0px = nggak ada sisa) */
+    --bleed-x: 0px;
+    --bleed-y: 0px;
+  }
+
+  /* Stage tablet (md-lg). Sama prinsipnya kayak desktop, bedanya rasio artboard
+     tablet 3:4 (768x1024), jadi tingginya 133.33% dari lebar frame. */
+  .hero-stage-tablet {
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background-color: #ffffff;
+    height: 133.33vw;
+  }
+
+  /* Pembungkus grup konten desktop. Posisinya sama persis dengan frame
+     (inset 0), jadi semua % di elemen anak tetap dihitung dari frame seperti
+     sebelumnya; cuma transform di sini yang menggeser semuanya bareng. */
+  .hero-content-desktop {
+    position: absolute;
+    inset: 0;
+    transform: translate(var(--geser-x, 0px), var(--geser-y, 0px));
+  }
+
+  .hero-frame-tablet {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    /* --u tablet = 1px di artboard tablet (lebar 768) = 1cqw/7.68 */
+    --u: calc(1cqw / 7.68);
+    --bleed-x: 0px;
+    --bleed-y: 0px;
+  }
+
+  @supports (height: 100dvh) and (width: 1cqw) {
+    .hero-stage-desktop {
+      height: 100dvh;
+    }
+
+    .hero-frame-desktop {
+      width: min(100%, calc(100dvh * 16 / 9));
+      container-type: inline-size;
+      --bleed-x: max(0px, calc((100vw - 100cqw) / 2));
+      --bleed-y: max(0px, calc((100dvh - 56.25cqw) / 2));
+    }
+
+    .hero-stage-tablet {
+      height: 100dvh;
+    }
+
+    .hero-frame-tablet {
+      width: min(100%, calc(100dvh * 3 / 4));
+      container-type: inline-size;
+      --bleed-x: max(0px, calc((100vw - 100cqw) / 2));
+      --bleed-y: max(0px, calc((100dvh - 133.33cqw) / 2));
+    }
+  }
 }

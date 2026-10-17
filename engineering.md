@@ -321,3 +321,36 @@ Format entri:
   - Animasi morf hamburger (2 balok jadi X) dan buka tutup panel mobile BELUM diuji klik sendiri. Headless Chrome tidak bisa klik, dan navbar baru tampil setelah tombol "Buka Portal" di preloader diklik. Jalur state baru dicek lewat code inspection, perlu konfirmasi Bang Rob
   - Preloader masih tampil tiap refresh (sengaja, biar gampang micro-manage)
   - Issue #7 (hero mobile) ditutup setelah PR ini merge dan production tervalidasi
+
+## 17 Okt 2026, Hero auto-fit (desktop + tablet): tinggal 1 layar di rasio apa pun
+
+- Tanggal: 17 Okt 2026
+- Judul: hero desktop & tablet auto-fit pakai frame rasio artboard + surface bleed, offset px jadi satuan yang ikut skala frame, surface dijadikan 3 warna penuh, eyebrow dan grup konten desktop dirapikan
+- File yang berubah:
+  - `src/styles/global.css`: kelas baru `.hero-stage-desktop`, `.hero-frame-desktop`, `.hero-stage-tablet`, `.hero-frame-tablet`, `.hero-content-desktop`, plus blok `@supports (height: 100dvh) and (width: 1cqw)`. Semua aturan di luar `@supports` masih memakai rumus lama (56.25vw / 133.33vw), jadi browser yang belum kenal dvh atau cqw tetap tampil normal, cuma belum ikut auto-fit
+  - `src/components/HeroDesktop.jsx`: section jadi frame rasio 16:9, 37 nilai px diubah jadi `calc(<angka>*var(--u))`, satuan `vw` jadi `cqw`, blok putih dan merah ditarik sampai dasar frame, batas hitam/putih balik ke 45.37%, eyebrow dipisah dari grup konten, grup isi bawah (quote + kartu + ENJOY) dibungkus `.hero-content-desktop`
+  - `src/components/HeroTablet.jsx`: section jadi frame rasio 3:4, 31 nilai `vw` jadi `cqw`, 35 nilai px jadi `calc(<angka>*var(--u))`, blok putih dan merah ditarik sampai dasar frame
+  - `src/components/Hero.jsx`: pembungkus tablet jadi stage 1 layar
+  - `src/components/HeroMobile.jsx`: hanya strip hitam di dasar surface yang dihapus. Mobile belum di-auto-fit, itu batch berikutnya
+  - Hasil build dicopy ke root: `index.html`, `assets/` (bundle lama `main-CtxWOgkj.js` dan `main-DWaNRq2f.css` dihapus), `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Kenapa perlu:
+  - Tinggi hero dikunci ke lebar layar (desktop 56.25vw, tablet 133.33vw), jadi cuma pas 1 layar kalau rasio layarnya sama dengan artboard. Di 1440x900 hero kurang 90px, di 1280x1024 kurang 304px, di 3440x1440 kelebihan 495px
+  - Cara kerjanya: stage setinggi 1 layar (`100dvh`) yang meng-clip dan men-center, frame rasio artboard di dalamnya, lalu blok warna melar keluar lewat `--bleed-x` / `--bleed-y` buat nutup sisa stage. Cuma tepi yang nempel ke luar yang digeser, batas antar blok nggak disentuh
+  - `--u` = 1px di artboard (desktop 1cqw/19.2 untuk lebar 1920, tablet 1cqw/7.68 untuk lebar 768). Semua offset yang dulu dipatok px sekarang ikut skala frame. Di lebar frame 1920 nilainya persis 1px, jadi tampilan 1920x1080 nol perubahan
+- Hasil tes:
+  - `npm run build`: sukses, 463 modul, 1.52 detik. Bundle `main-Ckm83RfE.js` 357.12 kB dan `main-R4zIfXOV.css` 30.56 kB
+  - md5 bundle root sama persis dengan `dist/assets/`: JS `43dd2caaebf66b98af772fcf1cfe2ab7`, CSS `0be9f04d8442a4bf4510fa18d7456712`. `index.html` root menunjuk bundle yang benar-benar ada, casing dicek
+  - Isi bundle terverifikasi memuat kode baru: `.hero-frame-desktop`, `.hero-frame-tablet`, `.hero-content-desktop`, `container-type:inline-size`, `133.33cqw` semuanya ada di CSS hasil build
+  - **Nol perubahan di rasio acuan**: screenshot 1920x1080, 2560x1440, dan 1280x720 dibandingkan before vs after, beda pixel 0.00% (frame, 4 blok warna, dan semua elemen konten identik). Tablet 768x1024 vs versi produksi juga 0.000%
+  - **Batas blok jadi tetap**: di 7 ukuran desktop, batas hitam/putih sekarang 31.25-31.39% (sebelumnya ayun 19.10-34.86%) dan batas merah 77.08-77.22% (sebelumnya 60.94-81.88%). Di 4 ukuran tablet batasnya 43.83-43.88% dan 95.43-95.51%
+  - **Isi frame = fungsi murni ukuran frame**: crop frame dari render non-16:9 dibandingkan dengan render 16:9 di ukuran frame yang sama, beda 0.000% (3440x1440 vs 2560x1440, 1440x900 vs 1440x810, 1280x1024 vs 1280x720)
+  - **Surface full 3 warna**: scan pixel di baris 80%, 97%, dan 99.5% dalam frame, isinya cuma putih (59.11% lebar) dan merah (sisanya) di desktop, 60.94% dan sisanya di tablet. Tidak ada lagi gutter putih polos di dasar hero
+  - **Grup konten desktop**: titik tengah grup konten (quote + kartu + ENJOY) di 50.03% lebar dan 51.06% tinggi frame di 1920x1080, dan angkanya sama di 1440x900, 1024x768, 3440x1440. Sebelumnya 56.33% lebar (space kiri 449px vs kanan 205px) dan 36% tinggi
+  - Posisi elemen desktop hasil ukur DOM, sama di 1920x1080, 1440x900, dan 1024x768: eyebrow center x 50.00% y 10.63%, headline 19.22-26.99%, quote 48.84-61.80% (di area putih, di bawah batas 45.37%), kartu logo 11.60-88.40% (poster utuh, sebelumnya kepotong di atas), ENJOY 59.19-81.19%
+  - Tablet dan mobile tidak terpengaruh ubahan desktop: screenshot 768x1024 dan 390x844 sebelum vs sesudah, beda 0.000%
+  - Syntax JSX 4 file: lolos esbuild. Em dash: nol di baris yang ditambah
+- Catatan jujur:
+  - Sisa beda kecil antar render tablet yang ukuran frame-nya sama cuma sub-pixel antialiasing teks (beda maksimum 50 dari 255, tak terlihat). Bounding box semua piksel teksnya pixel-identik
+  - `--geser-x` dibiarin 0% karena konten balik ke layout asli (quote dan ENJOY di 29.55%, kartu di 76.8%). Efeknya space kosong kiri/kanan belum imbang. Kalau mau imbang, eyebrow harus keluar dari tengah surface, jadi dua permintaan ini bertabrakan dan diserahkan ke Bang Rob
+  - Kalau nanti seluruh tampilan di-redesign, batch auto-fit ini tetap relevan sebagai mekanisme contain-nya. Yang perlu diulang cuma isi kontennya
+  - Hero mobile masih memakai rumus lama (`222.22vw`) dan belum di-auto-fit

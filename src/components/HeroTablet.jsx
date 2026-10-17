@@ -1,8 +1,9 @@
-// ===== HERO TABLET (md sampai lg, 768-1023px) — 🔒 LOCKED =====
+// ===== HERO TABLET (md sampai lg, 768-1023px), 🔒 LOCKED =====
 // Layout ini SUDAH DI-LOCK sama Bang Rob per sesi micro-manage. JANGAN diubah
 // kecuali diminta eksplisit. Kalau mau ngoprek, buka file lain (bukan ini).
 // Dibuat ulang persis ukuran artboard tablet(768x1024).svg (rasio 3:4).
-// Surface: kiri hitam/putih 60.94%, kanan merah 39.06%, strip bawah 4.4%.
+// Surface: kiri hitam/putih 60.94%, kanan merah 39.06%.
+// Strip hitam bawah dihapus 16 Okt 2026 (diminta Bang Rob, keliatan ganggu).
 // Elemen: eyebrow merah, headline pill merah, kartu logo kanan, quote,
 // kartu ENJOY kuning full-width. Tanpa chevron (di artboard tidak ada).
 import { motion } from 'framer-motion'
@@ -11,8 +12,7 @@ import TiltCard from './TiltCard.jsx'
 export default function HeroTablet({ started }) {
   return (
     <section
-      className="relative w-full overflow-hidden bg-white"
-      style={{ height: '133.33vw' }}
+      className="hero-frame-tablet bg-white"
       aria-hidden="true"
     >
       {/* surface: 4 blok warna, fade in pas preloader kelar */}
@@ -22,26 +22,29 @@ export default function HeroTablet({ started }) {
         animate={started ? { opacity: 1 } : { opacity: 0 }}
         transition={{ duration: 0.9, ease: 'easeOut' }}
       >
-        {/* blok kiri-atas: hitam (0-43.95%) */}
-        <div className="absolute left-0 top-0 h-[43.95%] w-[60.94%] bg-ink" />
-        {/* blok kiri-bawah: putih (43.95%-95.6%) */}
-        <div className="absolute left-0 top-[43.95%] h-[51.65%] w-[60.94%] bg-white" />
-        {/* blok kanan: merah (60.94%-100%, sampai strip) */}
-        <div className="absolute left-[60.94%] top-0 h-[95.6%] w-[39.06%] bg-accent" />
-        {/* strip bawah: hitam */}
-        <div className="absolute left-0 top-[95.6%] h-[4.4%] w-full bg-ink" />
+        {/* blok kiri-atas: hitam (0-43.95%, melar ke kiri + ke atas).
+            Tingginya nggak diubah, nggak boleh lebih tinggi dari blok putih. */}
+        <div className="absolute left-[calc(-1*var(--bleed-x))] top-[calc(-1*var(--bleed-y))] h-[calc(43.95%+var(--bleed-y))] w-[calc(60.94%+var(--bleed-x))] bg-ink" />
+        {/* blok kiri-bawah: putih, dari batas hitam/putih sampai DASAR frame.
+            16 Okt 2026: dulu berhenti di 95.6%, jadi bawah hero ada strip putih
+            polos dan surface kelihatan nggak full (dikeluhkan Bang Rob). */}
+        <div className="absolute left-[calc(-1*var(--bleed-x))] top-[43.95%] bottom-[calc(-1*var(--bleed-y))] w-[calc(60.94%+var(--bleed-x))] bg-white" />
+        {/* blok kanan: merah, dari atas sampai DASAR frame (melar ke kanan + atas + bawah) */}
+        <div className="absolute left-[60.94%] top-[calc(-1*var(--bleed-y))] bottom-[calc(-1*var(--bleed-y))] w-[calc(39.06%+var(--bleed-x))] bg-accent" />
+        {/* 16 Okt 2026: strip hitam bawah DIHAPUS (diminta Bang Rob, keliatan ganggu).
+            Area 95.6-100% sekarang ikut putih dari bg-white section. */}
       </motion.div>
 
       {/* eyebrow: dot merah + teks, di atas blok hitam (y 13.5-16.1%).
           Animasi zoom samain kayak desktop. */}
       <div
-        className={`absolute left-0 top-[calc(13.5%-100px+50px-20px+10px)] flex w-full translate-x-[5.25%] items-center justify-center ${
+        className={`absolute left-0 top-[calc(13.5%-100*var(--u)+50*var(--u)-20*var(--u)+10*var(--u))] flex w-full translate-x-[5.25%] items-center justify-center ${
           started ? 'animate-[eyebrow-zoom_1300ms_ease-in-out_both]' : 'opacity-0'
         }`}
       >
-        <span className="flex items-center gap-[0.72vw]">
-          <span className="aspect-square w-[1.36vw] rounded-full bg-white" aria-hidden="true" />
-          <span className="font-display text-[2.72vw] font-bold text-white">
+        <span className="flex items-center gap-[0.72cqw]">
+          <span className="aspect-square w-[1.36cqw] rounded-full bg-white" aria-hidden="true" />
+          <span className="font-display text-[2.72cqw] font-bold text-white">
             Bengkel Kode &amp; Karya Gue
           </span>
         </span>
@@ -49,7 +52,7 @@ export default function HeroTablet({ started }) {
 
       {/* headline: pill merah besar (320x136 artboard = 41.67% x 13.28%).
           Animasi "endok semen" sama persis dengan desktop. */}
-      <div className="absolute left-[calc(50%-31.2525%-11.25px)] top-[calc(23.1%-50px-50px-10px-10px+5px)] z-10 flex w-[calc(62.505%+22.5px)] justify-center">
+      <div className="absolute left-[calc(50%-31.2525%-11.25*var(--u))] top-[calc(23.1%-50*var(--u)-50*var(--u)-10*var(--u)-10*var(--u)+5*var(--u))] z-10 flex w-[calc(62.505%+22.5*var(--u))] justify-center">
         <motion.div
           className="w-full origin-center"
           initial={{ opacity: 0, x: 0, y: 0, scaleX: 1.7, scaleY: 1.7 }}
@@ -77,10 +80,10 @@ export default function HeroTablet({ started }) {
           }}
         >
           <TiltCard maxTilt={8} className="w-full">
-            <div className="flex h-[calc(19.92vw-75px-20px-10px)] w-full items-center justify-center rounded-full border-[0.2vw] border-ink bg-accent shadow-[0.6vw_0.9vw_1vw_rgba(27,24,24,0.4)]">
+            <div className="flex h-[calc(19.92cqw-75*var(--u)-20*var(--u)-10*var(--u))] w-full items-center justify-center rounded-full border-[0.2cqw] border-ink bg-accent shadow-[0.6vw_0.9vw_1vw_rgba(27,24,24,0.4)]">
               <h1
-                className="font-display text-[3.45vw] font-black leading-none text-white"
-                style={{ WebkitTextStroke: '0.2vw #ffffff' }}
+                className="font-display text-[3.45cqw] font-black leading-none text-white"
+                style={{ WebkitTextStroke: '0.2cqw #ffffff' }}
               >
                 Selamat Datang Di Portal Utama
               </h1>
@@ -91,7 +94,7 @@ export default function HeroTablet({ started }) {
 
       {/* kartu logo kanan (poster): putih miring, x 51.4-95.6%, y 17.4-63.4% */}
       <motion.div
-        className="absolute left-[calc(50%-22.05%)] top-[calc(50%-23%-50px-50px-10px+10px)] h-[50.6%] w-[48.51%] origin-bottom"
+        className="absolute left-[calc(50%-22.05%)] top-[calc(50%-23%-50*var(--u)-50*var(--u)-10*var(--u)+10*var(--u))] h-[50.6%] w-[48.51%] origin-bottom"
         initial={{ opacity: 0, y: '-110vh', scaleX: 1, scaleY: 1 }}
         animate={
           started
@@ -120,12 +123,12 @@ export default function HeroTablet({ started }) {
           transition={{ duration: 0.25, delay: 1.7, ease: 'easeOut' }}
         >
           <TiltCard maxTilt={8} className="h-full w-full">
-            <div className="relative flex h-full w-full flex-col items-center justify-center gap-[1.5vw] rounded-[2vw] border-[0.45vw] border-ink bg-white px-[8%] shadow-[0.6vw_0.9vw_1vw_rgba(27,24,24,1)]">
+            <div className="relative flex h-full w-full flex-col items-center justify-center gap-[1.5cqw] rounded-[2cqw] border-[0.45cqw] border-ink bg-white px-[8%] shadow-[0.6vw_0.9vw_1vw_rgba(27,24,24,1)]">
               {/* 2 ring dekorasi pojok atas (konsisten dengan kartu desktop) */}
-              <span className="absolute left-[3%] top-[3%] flex aspect-square w-[6%] items-center justify-center rounded-full border-[0.25vw] border-ink">
+              <span className="absolute left-[3%] top-[3%] flex aspect-square w-[6%] items-center justify-center rounded-full border-[0.25cqw] border-ink">
                 <span className="aspect-square w-1/3 rounded-full bg-ink" />
               </span>
-              <span className="absolute right-[3%] top-[3%] flex aspect-square w-[6%] items-center justify-center rounded-full border-[0.25vw] border-ink">
+              <span className="absolute right-[3%] top-[3%] flex aspect-square w-[6%] items-center justify-center rounded-full border-[0.25cqw] border-ink">
                 <span className="aspect-square w-1/3 rounded-full bg-ink" />
               </span>
               <img
@@ -140,7 +143,7 @@ export default function HeroTablet({ started }) {
       </motion.div>
 
       {/* quote: 3 baris teks hitam di permukaan putih kiri (y 45.9-72.3%) */}
-      <div className="absolute left-[calc(50%-48.5%)] top-[calc(45.9%+100px+100px+50px)] z-10 flex h-[26.4%] w-[97%] items-start justify-center">
+      <div className="absolute left-[calc(50%-48.5%)] top-[calc(45.9%+100*var(--u)+100*var(--u)+50*var(--u))] z-10 flex h-[26.4%] w-[97%] items-start justify-center">
         <motion.div
           className="relative w-full"
           initial={{ opacity: 0, scale: 0.5 }}
@@ -149,19 +152,19 @@ export default function HeroTablet({ started }) {
         >
           <span
             aria-hidden="true"
-            className="absolute -left-[calc(1.5vw-30px-15px)] -top-[2vw] rotate-[15deg] font-display text-[10vw] font-bold leading-none text-accent [text-shadow:0.2vw_0.25vw_0.3vw_rgba(27,24,24,0.4)]"
-            style={{ WebkitTextStroke: '0.15vw #1B1818' }}
+            className="absolute -left-[calc(1.5cqw-30*var(--u)-15*var(--u))] -top-[2cqw] rotate-[15deg] font-display text-[10cqw] font-bold leading-none text-accent [text-shadow:0.2vw_0.25vw_0.3vw_rgba(27,24,24,0.4)]"
+            style={{ WebkitTextStroke: '0.15cqw #1B1818' }}
           >
             &ldquo;
           </span>
-          <div className="text-center font-display text-[2.8vw] font-black leading-[1.35] text-ink">
+          <div className="text-center font-display text-[2.8cqw] font-black leading-[1.35] text-ink">
             <p>Tempat dimana semua ide, apps, websites, dan tools.</p>
             <p>Yang lahir dan live 24 Jam</p>
           </div>
           <span
             aria-hidden="true"
-            className="absolute -bottom-[calc(2.5vw+2vw)] -right-[calc(1.5vw+2vw-30px-30px-20px+5px)] rotate-[15deg] scale-x-[-1] font-display text-[10vw] font-bold leading-none text-white [text-shadow:0.2vw_0.25vw_0.3vw_rgba(27,24,24,0.4)]"
-            style={{ WebkitTextStroke: '0.15vw #1B1818' }}
+            className="absolute -bottom-[calc(2.5cqw+2cqw)] -right-[calc(1.5cqw+2cqw-30*var(--u)-30*var(--u)-20*var(--u)+5*var(--u))] rotate-[15deg] scale-x-[-1] font-display text-[10cqw] font-bold leading-none text-white [text-shadow:0.2vw_0.25vw_0.3vw_rgba(27,24,24,0.4)]"
+            style={{ WebkitTextStroke: '0.15cqw #1B1818' }}
           >
             &ldquo;
           </span>
@@ -170,17 +173,17 @@ export default function HeroTablet({ started }) {
 
       {/* kartu ENJOY: pill kuning full-width (x 14.3-85.2%, y 72.8-89%) */}
       <motion.div
-        className="absolute left-[calc(50%-35.4%+45px)] top-[calc(72.8%+40px+20px+10px-20px)] z-30 h-[16.2%] w-[calc(70.8%-40px-50px)] origin-center"
-        initial={{ opacity: 0, x: '-60vw', scaleX: 1, scaleY: 1 }}
+        className="absolute left-[calc(50%-35.4%+45*var(--u))] top-[calc(72.8%+40*var(--u)+20*var(--u)+10*var(--u)-20*var(--u))] z-30 h-[16.2%] w-[calc(70.8%-40*var(--u)-50*var(--u))] origin-center"
+        initial={{ opacity: 0, x: '-60cqw', scaleX: 1, scaleY: 1 }}
         animate={
           started
             ? {
                 opacity: [0, 1, 1, 1, 1],
-                x: ['-60vw', 0, 0, 0, 0],
+                x: ['-60cqw', 0, 0, 0, 0],
                 scaleX: [1, 1.18, 0.9, 1.08, 1],
                 scaleY: [1, 0.85, 1.12, 0.94, 1],
               }
-            : { opacity: 0, x: '-60vw', scaleX: 1, scaleY: 1 }
+            : { opacity: 0, x: '-60cqw', scaleX: 1, scaleY: 1 }
         }
         transition={{
           duration: 1.3,
@@ -196,10 +199,10 @@ export default function HeroTablet({ started }) {
       >
         <div className="h-full w-full scale-[0.8424]">
           <TiltCard maxTilt={8} className="h-full w-full">
-            <div className="flex h-full w-full items-center justify-center gap-[2vw] rounded-full border-[0.15vw] border-ink/30 bg-sun px-[4%] shadow-[0.4vw_0.6vw_1vw_rgba(27,24,24,0.3)]">
+            <div className="flex h-full w-full items-center justify-center gap-[2cqw] rounded-full border-[0.15cqw] border-ink/30 bg-sun px-[4%] shadow-[0.4vw_0.6vw_1vw_rgba(27,24,24,0.3)]">
             <span
-              className="font-display text-[7.02vw] font-black leading-none text-ink"
-              style={{ WebkitTextStroke: '0.3vw #1B1818' }}
+              className="font-display text-[7.02cqw] font-black leading-none text-ink"
+              style={{ WebkitTextStroke: '0.3cqw #1B1818' }}
             >
               ENJOY!!
             </span>
