@@ -82,6 +82,12 @@ html[data-theme='gelap'] {
      kalau browser-nya paham background-clip: text, jadi tidak ada judul hilang. */
   .teks-gradasi {
     color: var(--teks);
+    /* Kotak cat gradasi harus selalu menutup tinta huruf terakhir. Tinta bisa
+       menonjol sedikit keluar kotak span, dan bagian di luar kotak tidak
+       ter-paint (huruf terlihat terpotong). Padding melebarkan kotak cat,
+       margin negatif menetralkan efeknya supaya tata letak tidak bergeser. */
+    padding-inline: 0.15em;
+    margin-inline: -0.15em;
   }
 
   @supports (background-clip: text) or (-webkit-background-clip: text) {
@@ -97,12 +103,16 @@ html[data-theme='gelap'] {
   /* Bagian aksen (RA di RALABS): gradasi merah + shadow tipis tinta.
      Ukuran/weight/tracking ikut h1; cuma warna & bayangan yang beda. */
   .teks-aksen {
-    /* Tracking negatif bikin huruf L menempel ke kaki A. Naikkan RA satu
-       lapis supaya merah A tetap penuh, tanpa mengubah tracking/ukuran. */
+    /* Naikkan RA satu lapis supaya merah A tetap penuh di sambungan huruf,
+       tanpa mengubah ukuran/tata letak. */
     position: relative;
     z-index: 1;
     color: var(--merah);
     text-shadow: 0 0.03em 0.05em rgba(110, 0, 0, 0.3);
+    /* Sama seperti .teks-gradasi: lebarkan kotak cat supaya kaki huruf
+       terakhir (A) tidak terpotong. */
+    padding-inline: 0.15em;
+    margin-inline: -0.15em;
   }
 
   @supports (background-clip: text) or (-webkit-background-clip: text) {

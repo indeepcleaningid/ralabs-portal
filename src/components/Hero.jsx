@@ -10,21 +10,24 @@ export default function Hero() {
       id="home"
       className="relative flex min-h-[calc(100svh_-_84px)] flex-col overflow-x-clip bg-bidang text-teks"
     >
-      {/* Headline: satu baris. Ukuran 7.5vw itu batas aman 21 karakter uppercase
-          biar full-bleed tanpa kepotong, dari 320px sampai layar lebar. */}
+      {/* Headline: satu baris. Spacing huruf default (tanpa tracking negatif).
+          Ukuran 13vw buat Bebas Neue: teks "HERE'S RALABS" lebarnya 4.6em,
+          jadi 13vw = 60vw dari 97vw area yang tersedia (px-[1.5vw]) → terisi 62%.
+          Naik/turun-nya lewat angka vw ini, min & max ikut diskalakan. */}
       <div className="relative z-20 overflow-hidden px-[1.5vw] pt-6 sm:pt-4">
         <FadeIn delay={0.1} y={40}>
-          <h1 className="text-center uppercase whitespace-nowrap font-heading text-[clamp(2.4rem,13.8vw,24rem)] font-extrabold leading-none tracking-[-0.045em]">
+          {/* Bebas Neue cuma punya satu berat, jadi font-weight tidak berpengaruh. */}
+          <h1 className="text-center uppercase whitespace-nowrap font-headline text-[clamp(2.6rem,13vw,33rem)] leading-none tracking-normal">
             <span className="teks-gradasi">HERE&apos;S </span><span className="teks-aksen">RA</span><span className="teks-gradasi">LABS</span>
           </h1>
         </FadeIn>
       </div>
 
       {/* Logo 3D: mengisi sisa ruang vertikal di antara headline dan bar.
-          Ukuran mengikuti tinggi layar & tinggi headline supaya hero selalu utuh.
-          Posisi tetap; yang bisa dimainkan cuma rotasinya. */}
+          Ukuran mengikuti tinggi layar & tinggi headline (13vw) supaya
+          hero selalu utuh. Posisi tetap; yang bisa dimainkan cuma rotasinya. */}
       <div className="flex min-h-0 flex-1 items-center justify-center px-[2.5vw]">
-        <div className="-translate-y-4 w-[min(320px,40svh)] sm:w-[min(480px,calc(100svh_-_13.8vw_-_194px))] md:w-[min(520px,calc(100svh_-_13.8vw_-_194px))] md:-translate-y-[60px] md:scale-[1.22] lg:w-[min(560px,calc(100svh_-_13.8vw_-_194px))]">
+        <div className="-translate-y-4 w-[min(320px,40svh)] sm:w-[min(480px,calc(100svh_-_13vw_-_194px))] md:w-[min(520px,calc(100svh_-_13vw_-_194px))] md:-translate-y-[60px] md:scale-[1.22] lg:w-[min(560px,calc(100svh_-_13vw_-_194px))]">
           <FadeIn delay={0.45} y={30}>
             <Logo3D />
           </FadeIn>

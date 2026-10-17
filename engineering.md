@@ -418,3 +418,39 @@ Format entri:
   - Bundle JS naik ke 957.43 kB (gzip 272.69 kB) karena `three` + `framer-motion`; masih warning > 500 kB. Optimasi code-split/asset 3D belum dikerjakan
   - GLB 1.52 MB; 3D sudah "locked" oleh Bang Rob, perubahan layout berikutnya tidak boleh menggeser objek
   - `plan-prd/` tetap di `.gitignore`, jadi plan/spec tidak ikut PR ini
+
+## 17 Okt 2026, Headline Bebas Neue + spacing huruf default
+
+- Tanggal: 17 Okt 2026
+- Judul PR: headline hero pakai Bebas Neue, spacing huruf default, kaki A tidak lagi terpotong
+- File yang berubah:
+  - `src/components/Hero.jsx` (font headline, `clamp` baru, kalkulasi tinggi headline di wrapper logo 3D)
+  - `tailwind.config.js` (token `headline`)
+  - `entries/index.html` (URL Google Fonts ditambah Bebas Neue)
+  - `src/styles/global.css` (`.teks-gradasi` dan `.teks-aksen`: `padding-inline` + `margin-inline`)
+  - Hasil build dicopy ke root: `index.html`, `assets/main-7h7voN6W.css`, `assets/main-DPa37LmH.js` (bundle lama `main-C-kemC6l.css` dan `main-D65CF_ge.js` dihapus dulu), `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Kenapa perlu:
+  1. **Font headline.** Manrope diganti Bebas Neue. Bebas Neue cuma punya satu berat, jadi `font-extrabold` tidak berpengaruh dan ikut dibuang. Token baru `font-headline` dipakai supaya font judul lain (`font-heading`) tidak ikut berubah. URL Google Fonts dapat `family=Bebas+Neue`, Manrope tetap dimuat sebagai cadangan
+  2. **Kaki A terpotong.** `background-clip: text` cuma mengecat gradasi di dalam kotak span. Saat tracking masih negatif, tinta huruf terakhir menonjol keluar kotak itu dan bagian di luarnya tidak ter-paint, jadi kelihatan terpotong (paling jelas di kaki kanan A pada `RA`). Kotak catnya dilebarkan lewat `padding-inline: 0.15em`, lalu ditarik balik dengan `margin-inline: -0.15em`. Untuk kotak inline, padding menggeser teks sesudahnya dan margin negatif mengembalikannya, jadi tata letak tidak bergeser sedikit pun. Vertikal tidak disentuh karena tidak ada masalah di sana
+  3. **Spacing default.** `tracking-[-0.045em]` dibuang, diganti `tracking-normal` sebagai kelas. Kelasnya wajib ditulis eksplisit karena `global.css` punya aturan dasar `h1, h2, h3 { letter-spacing: -0.01em }` yang akan ikut kena kalau tidak ditimpa. Kelas menang atas selektor elemen, jadi hasil akhirnya `letter-spacing: 0em`
+  4. **Ukuran dihitung ulang dari nol.** Lebar teks "HERE'S RALABS" per-em berubah: 8.3em (Manrope) jadi 4.6em (Bebas Neue). Angka 13.8vw dari batch sebelumnya tidak relevan lagi. Dipilih `13vw` = teks selebar ~60vw dari 97vw area yang tersedia, jadi terisi sekitar 62%. `min` dan `max` ikut diskalakan (2.6rem dan 33rem) supaya rasio isi sama dari HP sampai layar lebar. Kalkulasi tinggi headline di wrapper logo 3D ikut disinkronkan ke `13vw` supaya hero tetap muat satu layar
+- Hasil tes:
+  - `npm run build`: sukses, 6499 modul, 4.24 detik. CSS `main-7h7voN6W.css` 26.17 kB (gzip 6.07 kB), JS `main-DPa37LmH.js` 957.40 kB (gzip 272.68 kB). Warning chunk JS di atas 500 kB masih ada
+  - md5 bundle root sama persis dengan `dist/assets/`: CSS `9324c41fe66961cec7615e75793d5c6e`, JS `79f7906bfdc563b6ecfd406f20fff8bc`
+  - `index.html` root menunjuk `assets/main-7h7voN6W.css` dan `assets/main-DPa37LmH.js` yang benar-benar ada (casing dicek). Nol sisa rujukan ke hash lama `C-kemC6l`/`D65CF_ge`, dan `assets/` isinya cuma 1 js + 1 css
+  - Semua rujukan gambar dicek satu-satu dan ada: `images/favicon-logo.webp`, `images/og-banner.webp`, `images/logo+logotext.webp`, `images/logo-preload.webp`, `images/logo-ralabs-3d.glb`, `images/mascot-enjoy.svg`. Nol `url()` di bundle CSS
+  - Kode baru terverifikasi masuk bundle: `Bebas Neue`, `clamp(2.6rem,13vw,33rem)`, `padding-inline:.15em`, `margin-inline:-.15em`, `100svh - 13vw - 194px`, dan `.tracking-normal{letter-spacing:0em}`. Aturan `.teks-gradasi`/`.teks-aksen` di bundle sudah memuat padding+margin itu. Nol sisa `-.045em` di bundle CSS
+  - Dev server 5015 (server Bang Rob): `GET /` 200 dan `GET /src/main.jsx` 200. Halaman yang disajikan sudah memuat `family=Bebas+Neue`, `Hero.jsx` sudah memuat `font-headline ... tracking-normal` dan `13vw_-_194px`, `global.css` sudah memuat `padding-inline: 0.15em`
+  - Render halaman hasil build lewat CDP (gerbang dibuka pakai klik tombol "Masuk", seperti pengunjung biasa). Font terhitung `"Bebas Neue", Manrope, ...`, `letter-spacing: normal`, ukuran `46.8 / 99.84 / 166.4 / 187.2 px` di lebar `360 / 768 / 1280 / 1440`. Isi headline `63.7 / 64.9 / 64.4 / 64.3%` dari area kontainer
+  - Lebar 360, 768, 1280, 1440 (dan 390): `scrollWidth - clientWidth = 0` di dokumen dan body, jadi tidak ada scroll horizontal. Hero muat satu layar: 696/780, 940/1024, 816/900, 816/900, 760/844
+  - 41 tautan: nol `href` kosong, nol `href="#"`, nol jangkar mati (`#home`, `#about`, `#collection`, `#contact`, `#konten-utama` semua punya target). Nol gambar gagal muat. Konsol dan jaringan bersih: nol error, nol warning, nol 404
+  - Uji piksel kaki A: screenshot versi gradasi dibandingkan versi kontrol yang `background-clip`-nya dimatikan (tinta jadi warna solid, jadi tidak mungkin terklip). Kotak tinta identik: kiri 573, atas 226, kanan 2283, bawah 593, selisih 0 di keempat sisi. Titik tinta paling kanan juga sama di 2283
+  - Kontras: tinta/kertas 18.70:1, merah `#D70000` di atas kertas 5.16:1, merah di atas tinta 3.62:1 (lolos batas 3:1 untuk elemen non-teks)
+- Catatan jujur:
+  - `13vw` bikin headline ngisi ~62–64% area, jadi ada ruang kosong lebar di kiri-kanan. Kalau mau lebih penuh, tinggal naikkan angka vw dan `min`/`max` ikut diskalakan
+  - Archivo Black sempat dicoba di tengah sesi ini sebagai font headline, lalu dibuang sebelum commit. Nggak ada jejaknya di riwayat
+  - Token `heading` (Manrope) sekarang tidak dipakai komponen mana pun. Masih dibiarkan, belum dihapus
+  - Pengukuran di lebar 390 pakai emulasi `prefers-color-scheme: dark`, tapi halaman tetap tampil tema terang karena tema disimpan di localStorage oleh `src/theme.js`. Jadi angka 390 itu angka tema terang. Tema gelap dicek manual lewat tombol tema, bukan lewat pengukuran otomatis
+  - Uji piksel dan pengukuran render pakai hasil build yang disajikan lokal (`:8899`), bukan dev server 5015. Dev server cuma dicek status 200 dan isi sumber yang disajikannya
+  - `plan-prd/hero-rombak/design.md` masih memuat angka lama (Manrope, 13.8vw, tracking -0.045em) dan folder `plan-prd/` di-gitignore, jadi tidak ikut PR ini. Belum disinkronkan
+  - Bundle JS tetap 957.40 kB (gzip 272.68 kB), belum di-code-split
