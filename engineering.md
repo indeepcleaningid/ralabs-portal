@@ -454,3 +454,41 @@ Format entri:
   - Uji piksel dan pengukuran render pakai hasil build yang disajikan lokal (`:8899`), bukan dev server 5015. Dev server cuma dicek status 200 dan isi sumber yang disajikannya
   - `plan-prd/hero-rombak/design.md` masih memuat angka lama (Manrope, 13.8vw, tracking -0.045em) dan folder `plan-prd/` di-gitignore, jadi tidak ikut PR ini. Belum disinkronkan
   - Bundle JS tetap 957.40 kB (gzip 272.68 kB), belum di-code-split
+
+## 17 Okt 2026, Surface hero gelap + headline Archivo kaca
+
+- Tanggal: 17 Okt 2026
+- Judul PR: surface hero pakai cahaya gelap dari pojok kanan atas, headline ganti Archivo 900 dengan material kaca
+- File yang berubah:
+  - `entries/index.html` (Google Fonts: `Bebas+Neue` diganti `Archivo:wght@100..900`)
+  - `tailwind.config.js` (token `headline` jadi `Archivo`)
+  - `src/components/Hero.jsx` (kelas `hero-section`, `font-black`, ukuran `clamp(1.8rem,9vw,22rem)`, kalkulasi tinggi 3D `11vw`→`9vw`)
+  - `src/styles/global.css` (blok `.hero-section`, `.teks-gradasi` jadi gradasi kaca, stroke penebalan di `.teks-gradasi` dan `.teks-aksen`)
+  - Hasil build: `index.html`, `assets/main-YTS0Qg2x.css`, `assets/main-SNDfDEcU.js` (bundle lama `main-7h7voN6W.css` dan `main-DPa37LmH.js` dihapus lebih dulu), `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Kenapa perlu:
+  1. **Surface hero gelap.** Bidang hero sebelumnya putih polos, jadi objek 3D tidak punya kontras dan terlihat menempel datar. Sekarang ada lapisan gelap yang menyebar dari pojok kanan atas (`radial-gradient ellipse 165% 150% at 100% 0%`, opasitas 0.96 di pusat turun ke 0 di tepi) supaya objek 3D terangkat. Titik pusat, kekuatan, dan jangkauan ini hasil tuning langsung Bang Rob, sudah disetujui dan dikunci di komentar CSS. Gradient ditempel di `<section>`, bukan di `<div>` terpisah, karena div selalu punya bentuk kotak yang bisa terasa walaupun gradient di dalamnya halus
+  2. **Warna dasar tidak diganti.** `.hero-section` tetap memakai `background-color: var(--bidang)`. Gradient gelap adalah lapisan tambahan di atasnya, jadi di tema terang bidangnya tetap kertas `#F8FAFC` dan di tema gelap tetap tinta. Tema gelap memakai gradient terang dari titik yang sama, karena gelap-di-atas-gelap tidak terbaca
+  3. **Font headline Archivo.** Bebas Neue terlalu tipis dan tinggi untuk bidang yang sekarang lebih gelap. Archivo variable di weight 900 memberi badan huruf yang jauh lebih tebal, jadi huruf bisa "menahan" area gelap di sekitarnya. Ukuran diturunkan dari `13vw` ke `9vw` karena lebar per-em Archivo lebih besar dari Bebas Neue; kalau tetap `13vw` headline melewati lebar layar. `min`/`max` ikut diskalakan, dan kalkulasi tinggi wrapper 3D disinkronkan ke `9vw` supaya hero tetap muat satu layar
+  4. **Material kaca di HERE'S dan LABS.** Gradient vertikal tujuh stop dari putih `#FFFFFF` di atap huruf, garis refleksi tipis di 6–7%, lalu turun ke grey cool `#6B7488` di kaki huruf. Jarak antar stop dibuat jauh supaya terbaca sebagai material, bukan warna rata. Ditambah `opacity: 0.92` supaya terasa ada kedalaman seperti kaca
+  5. **Penebalan lewat stroke transparan.** Weight Archivo sudah maksimal (900), jadi ketebalan ditambah dengan `-webkit-text-stroke: 0.012em transparent` + `paint-order: stroke fill`. Stroke transparan melebarkan area yang di-paint, lalu area itu diisi gradient yang ada di belakangnya, jadi huruf tetap kaca dan huruf tidak berubah jadi outline. Ketebalan yang sama dipakai di `RA` supaya badan headline rata
+  6. **RA tetap merah.** `RA` tidak ikut aturan kaca. Gradient merahnya tetap `#A00000 → #D70000`
+- Yang sengaja TIDAK dikerjakan:
+  - **Shadow tidak dipasang.** Sempat beberapa kali dicoba (text-shadow, lalu lapisan `::before` salinan huruf), semuanya dibatalkan atas permintaan Bang Rob. Tidak ada sisa `text-shadow`, `::before` shadow, maupun `data-bayang` di kode
+  - **Posisi headline dan objek 3D tidak digeser.** Objek 3D tetap di tengah, headline tetap di tengah-atas. Yang berubah hanya surface dan perlakuan tipografi
+- Hasil tes:
+  - `npm run build`: sukses, 6499 modul, 6.19 detik. CSS `main-YTS0Qg2x.css` 26.68 kB (gzip 6.26 kB), JS `main-SNDfDEcU.js` 957.41 kB (gzip 272.68 kB). Warning chunk JS di atas 500 kB masih ada
+  - md5 bundle root sama persis dengan `dist/assets/`: `index.html` `e27874a4e2de700c10f7da59b5a9ba1b`, JS `676e06196c41b742bb96f03aaa39192b`, CSS `f896f74d3334491926760bf48e9dc4c0`
+  - `index.html` root menunjuk `assets/main-YTS0Qg2x.css` dan `assets/main-SNDfDEcU.js` yang benar-benar ada. Nol sisa rujukan ke hash lama `7h7voN6W`/`DPa37LmH`, dan `assets/` isinya cuma 1 js + 1 css
+  - Rujukan gambar dicek satu-satu dan ada semua: `images/favicon-logo.webp`, `images/og-banner.webp`, `images/logo+logotext.webp`, `images/logo-preload.webp`, `images/logo-ralabs-3d.glb`. Nol `url()` di bundle CSS
+  - Kode baru terverifikasi masuk bundle build: `165% 150%`, `#6b7488`, `clamp(1.8rem,9vw,22rem)`, token `Archivo`
+  - Dev server 5015: `GET /` 200. Render hasil build yang disajikan lokal (`:8899`), gerbang dibuka lewat klik tombol "Masuk"
+  - Render hasil build, lebar 360 / 768 / 1280: `font-family` terhitung `Archivo, Manrope, ...`, `font-weight: 900`, ukuran `32.4 / 69.12 / 115.2 px`, `background-image` hero memuat `radial-gradient(165% 150% at 100% 0%, ...)`, canvas 3D ada (1 per lebar)
+  - Lebar 360, 768, 1280: `scrollWidth - clientWidth = 0` di dokumen dan body, tidak ada scroll horizontal. Hero muat satu layar: tinggi 816 px dari viewport 900 px di ketiga lebar
+  - Console: nol error, nol exception
+  - Kontras: tinta/kertas 18.70:1, merah `#D70000` di atas kertas 5.16:1
+- Catatan jujur:
+  - Warna huruf kaca (grey cool `#FFFFFF → #6B7488`) dipilih oleh saya untuk menyelesaikan permintaan "light grey yang lebih cool", belum ada validasi kontras terpisah terhadap area gelap di pojok kanan atas. Area `LABS` masuk zona gelap dengan opasitas tertinggi, jadi huruf di sana bertemu latar paling gelap. Sudah dicek terlihat di render, tapi belum diukur kontrasnya secara numerik
+  - `opacity: 0.92` di `.teks-gradasi` membuat huruf sedikit tembus. Ini keputusan visual untuk kesan kaca, belum diuji terhadap pembaca layar atau kondisi cahaya rendah
+  - Stroke `0.012em` memakai `-webkit-text-stroke` yang bukan properti standar. Chrome, Edge, Safari, dan Firefox mendukungnya; kalau tidak didukung, huruf hanya kehilangan penebalan, tidak rusak
+  - Bundle JS tetap 957.41 kB (gzip 272.68 kB), belum di-code-split. GLB tetap 1.52 MB
+  - `plan-prd/` masih di-gitignore dan belum diperbarui untuk batch ini

@@ -78,10 +78,20 @@ html[data-theme='gelap'] {
     line-height: 1.15;
   }
 
-  /* Teks judul gradasi (hero). Warna dasarnya teks biasa; baru jadi gradasi
-     kalau browser-nya paham background-clip: text, jadi tidak ada judul hilang. */
+  /* Teks judul KACA (hero: HERE'S + LABS). Satu lapis huruf, materialnya kaca.
+     Warna dasar tetap diset supaya kalau browser tidak paham background-clip,
+     judul masih terbaca (tidak hilang). */
   .teks-gradasi {
-    color: var(--teks);
+    position: relative;
+    z-index: 1;
+    color: #c9d1de;
+    /* Ketebalan tambahan. Archivo sudah di weight maksimal (900), jadi
+       "lebih tebal" dicapai lewat stroke yang menyatu dengan isi huruf:
+       stroke-nya dicat pakai warna gradient yang sama (tidak mungkin pakai
+       -webkit-text-stroke karena itu cuma satu warna solid dan akan menutup
+       gradient kaca). Hasilnya huruf tetap kaca, cuma badan hurufnya naik. */
+    -webkit-text-stroke: 0.012em transparent;
+    paint-order: stroke fill;
     /* Kotak cat gradasi harus selalu menutup tinta huruf terakhir. Tinta bisa
        menonjol sedikit keluar kotak span, dan bagian di luar kotak tidak
        ter-paint (huruf terlihat terpotong). Padding melebarkan kotak cat,
@@ -92,7 +102,27 @@ html[data-theme='gelap'] {
 
   @supports (background-clip: text) or (-webkit-background-clip: text) {
     .teks-gradasi {
-      background-image: linear-gradient(180deg, var(--grad-atas), var(--grad-bawah));
+      /* Satu gradient yang meniru penampang kaca dari atas ke bawah:
+         1. atap huruf memantulkan cahaya            → hampir putih
+         2. garis refleksi tipis (garis terang)      → putih penuh
+         3. badan kaca meneruskan cahaya             → grey terang cool
+         4. makin ke bawah makin menyerap lingkungan → grey medium
+         5. kaki huruf membiaskan dasar               → grey gelap cool
+         Perbedaan antar stop sengaja cukup jauh supaya terbaca sebagai
+         material, bukan sebagai warna rata. */
+      background-image: linear-gradient(
+        180deg,
+        #ffffff 0%,
+        #ffffff 6%,
+        #e8edf6 7%,
+        #cfd7e5 22%,
+        #b3bdce 48%,
+        #8b95a9 78%,
+        #6b7488 100%
+      );
+      /* Isi huruf semi transparan supaya terasa ada kedalaman seperti kaca.
+         0.92 cukup: masih jelas terbaca, tapi tidak terlihat seperti cat padat. */
+      opacity: 0.92;
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -100,15 +130,20 @@ html[data-theme='gelap'] {
     }
   }
 
-  /* Bagian aksen (RA di RALABS): gradasi merah + shadow tipis tinta.
-     Ukuran/weight/tracking ikut h1; cuma warna & bayangan yang beda. */
+  /* Bagian aksen (RA di RALABS): gradasi merah.
+     Ukuran/weight/tracking ikut h1; cuma warna yang beda. */
   .teks-aksen {
     /* Naikkan RA satu lapis supaya merah A tetap penuh di sambungan huruf,
        tanpa mengubah ukuran/tata letak. */
     position: relative;
     z-index: 1;
+    /* RA ikut ditebalkan dengan cara yang sama seperti .teks-gradasi:
+       stroke transparan, jadi area tambahannya diisi gradient merah di
+       belakangnya (bukan outline, bukan warna solid). Ketebalan disamakan
+       supaya badan huruf headline rata. */
+    -webkit-text-stroke: 0.012em transparent;
+    paint-order: stroke fill;
     color: var(--merah);
-    text-shadow: 0 0.03em 0.05em rgba(110, 0, 0, 0.3);
     /* Sama seperti .teks-gradasi: lebarkan kotak cat supaya kaki huruf
        terakhir (A) tidak terpotong. */
     padding-inline: 0.15em;
@@ -148,6 +183,46 @@ html[data-theme='gelap'] {
     @apply underline decoration-1 underline-offset-4;
     overflow-wrap: anywhere;
   }
+}
+
+/* ---- Background hero: cahaya yang menyebar dari pojok kanan atas ----
+   Bukan bayangan benda, bukan blok, bukan bentuk. Ini cahaya yang keluar dari
+   satu titik di pojok kanan atas dan makin jauh makin tipis, sampai hilang
+   tanpa bekas. Bedanya cuma satu: cahayanya berwarna gelap.
+
+   Kenapa gradient nempel langsung di <section>, bukan di <div>:
+   div pasti punya bentuk (kotak). Walaupun gradient di dalamnya halus, batas
+   div-nya tetap bisa terasa. Dengan ditempel di section, tidak ada wadah sama
+   sekali — yang ada cuma bidang yang gelapnya luruh ke arah tengah.
+
+   Nilai ini hasil tuning Bang Rob: pekat di pojok, jangkauan jauh melewati
+   tengah layar, hilang total tanpa tepi. JANGAN diubah tanpa izin. */
+.hero-section {
+  background-color: var(--bidang);
+  background-image: radial-gradient(
+    ellipse 165% 150% at 100% 0%,
+    rgba(10, 14, 26, 0.96) 0%,
+    rgba(10, 14, 26, 0.86) 20%,
+    rgba(10, 14, 26, 0.68) 42%,
+    rgba(10, 14, 26, 0.44) 62%,
+    rgba(10, 14, 26, 0.2) 80%,
+    rgba(10, 14, 26, 0.06) 92%,
+    rgba(10, 14, 26, 0) 100%
+  );
+}
+
+/* Tema gelap: bidangnya sudah tinta, jadi gelap-di-atas-gelap tidak terbaca.
+   Sumber cahayanya tetap di pojok yang sama, tapi kali ini benar-benar
+   memancarkan terang (versi normal dari efek yang sama). */
+html[data-theme='gelap'] .hero-section {
+  background-image: radial-gradient(
+    circle at 100% 0%,
+    rgba(248, 250, 252, 0.14) 0%,
+    rgba(248, 250, 252, 0.09) 15%,
+    rgba(248, 250, 252, 0.04) 35%,
+    rgba(248, 250, 252, 0.01) 55%,
+    rgba(248, 250, 252, 0) 75%
+  );
 }
 
 /* ---- Tumpukan kartu Collection (adaptasi reference/card-swap-components.md) ----
