@@ -17,6 +17,8 @@ export default {
         lawanTeks: 'var(--lawan-teks)',
       },
       fontFamily: {
+        /* Manrope khusus judul tebal; sisanya tetap Comfortaa + JetBrains Mono. */
+        heading: ['Manrope', 'Comfortaa', 'ui-rounded', 'system-ui', 'sans-serif'],
         sans: ['Comfortaa', 'ui-rounded', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },

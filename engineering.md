@@ -389,3 +389,32 @@ Format entri:
   - Dua gambar jadi nganggur karena komponennya dihapus: `images/logo-preload.webp` (dulu dipakai `Preloader.jsx`) dan `images/logo-text.webp`. Belum dihapus, masih ikut ter-commit di root
   - `plan-prd/` ada di `.gitignore`, jadi folder plan dan spec tidak ikut masuk repo ini. Catatan desain batch ini disimpan lokal saja
   - Sebagian besar isi batch ini dikerjakan sebelum sesi ini, jadi alasan per bagiannya tidak semuanya gue tahu. Yang gue rombak di sesi ini bagian navbar CardNav dan versi sempitnya
+
+## 17 Okt 2026, Hero 3D + headline "HERE'S RALABS"
+
+- Tanggal: 17 Okt 2026
+- Judul PR: rombak hero — headline HERE'S RALABS (RA aksen) + logo 3D GLB interaktif
+- File yang berubah:
+  - Baru: `src/components/FadeIn.jsx`, `src/components/Logo3D.jsx`
+  - Ubah: `src/components/Hero.jsx`, `src/styles/global.css`, `entries/index.html` (font Manrope), `tailwind.config.js` (`font-heading`), `package.json` + `package-lock.json` (`framer-motion`)
+  - Aset: `public/images/logo-ralabs-3d.glb` (1.52 MB), `public/images/banner-logo.webp` (copy), hasil build `images/logo-ralabs-3d.glb`
+  - Hasil build dicopy ke root: `index.html`, `assets/main-C-kemC6l.css`, `assets/main-D65CF_ge.js`, `images/`, `404.html`, `robots.txt`, `sitemap.xml`, `humans.txt`
+- Kenapa perlu:
+  - Headline diganti ke "HERE'S RALABS" uppercase, rata tengah, ukuran/posisi sama seperti sebelumnya. Bagian `RA` memakai `.teks-aksen`: gradient accent opaque `#A00000 → #D70000` + text-shadow merah halus. Gradient dipasang per-span (bukan di parent) untuk menutup seam 1px yang sempat muncul sebagai garis gelap di kaki A
+  - Hero memakai logo 3D dari GLB buatan Rob: warna/shadow mengikuti vertex color aset (linear), material unlit. Kamera orthographic dengan frustum tetap + pan per frame, jadi ukuran objek konstan dan rotasi vertikal/horizontal penuh tanpa terpotong
+  - `Magnet.jsx`/`TiltMark.jsx` tidak dipakai lagi (posisi objek harus tetap; interaksi murni rotasi lewat OrbitControls)
+  - `framer-motion` dipakai untuk fade-in; `three` + GLTFLoader/OrbitControls untuk logo 3D
+- Hasil tes:
+  - `npm run build`: sukses, 6499 modul, 4.41 detik. CSS `main-C-kemC6l.css` 26.14 kB, JS `main-D65CF_ge.js` 957.43 kB (gzip 272.69 kB). Ada warning chunk > 500 kB
+  - md5 bundle root sama dengan `dist/assets/`: CSS `2528f3c06ea9bf199b9ba6949d7343b9`, JS `cde67b8672455f5a61c9ec1ad284095b`
+  - `index.html` root menunjuk bundle yang ada (case-sensitive dicek), tidak ada sisa hash lama `Ck5gxF4P`/`B_PfGh5a`. Semua rujukan lokal di `index.html` dan `404.html` ada
+  - Dev server 5015 (server Bang Rob): h1 `HERE'S RALABS`, `RA` gradient `rgb(160,0,0) → rgb(215,0,0)`, tidak ada error console
+  - GLB dimuat 200 dari `/images/logo-ralabs-3d.glb`; canvas 3D tampil
+  - Lebar 360, 768, 1280: `scrollWidth - clientWidth = 0` (tidak ada scroll horizontal)
+  - CTA hero: `https://indeepcleaningid.site/` dan `https://robbyaliasa.tongkrongan.tech/`, bukan link mati
+  - Kontras: kertas `#F8FAFC` di atas merah `#D70000` 5.16:1, merah di atas kertas 5.16:1, tinta di atas kertas 18.70:1
+  - Seam gelap di kaki A: 0 piksel gelap yang menempel ke area merah (diukur dari screenshot, canvas 3D disembunyikan)
+- Catatan jujur:
+  - Bundle JS naik ke 957.43 kB (gzip 272.69 kB) karena `three` + `framer-motion`; masih warning > 500 kB. Optimasi code-split/asset 3D belum dikerjakan
+  - GLB 1.52 MB; 3D sudah "locked" oleh Bang Rob, perubahan layout berikutnya tidak boleh menggeser objek
+  - `plan-prd/` tetap di `.gitignore`, jadi plan/spec tidak ikut PR ini
