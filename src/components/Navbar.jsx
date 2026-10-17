@@ -1,208 +1,127 @@
-import { useEffect, useState } from 'react'
-import TiltCard from './TiltCard.jsx'
+import { useState } from 'react'
+import { bacaTema, pasangTema } from '../theme.js'
+import CardNav from './CardNav.jsx'
+import './Navbar.css'
 
-// Link nav diisi per batch begitu section-nya benar benar ada.
-// Sekarang penuh: Koleksi, Tentang, Alur, Kontak, semua anchor real.
-const NAV_ITEMS = [
-  { label: 'Home', href: '#home', id: 'home' },
-  { label: 'Koleksi', href: '#koleksi', id: 'koleksi' },
-  { label: 'Tentang', href: '#tentang', id: 'tentang' },
-  { label: 'Alur', href: '#alur', id: 'alur' },
-  { label: 'Kontak', href: '#kontak', id: 'kontak' },
+const GITHUB = 'https://github.com/robbyaliasaakbar'
+
+// Empat kartu, satu per section. Statis, jadi ditaruh di luar komponen.
+const KARTU = [
+  {
+    label: 'Home',
+    description: 'Portal semua projects.',
+    links: [{ label: 'Home', href: '#home' }],
+  },
+  {
+    label: 'About',
+    description: 'Kumpulan projects yang dibangun sendiri atau bareng tim.',
+    links: [{ label: 'About', href: '#about' }],
+  },
+  {
+    label: 'Collection',
+    description: 'Seluruh keleksi project yang sudah diterbitkan',
+    links: [{ label: 'Collection', href: '#collection' }],
+  },
+  {
+    label: 'Contact',
+    description: 'Email, WhatsApp, dan tautan lain.',
+    links: [{ label: 'Kontak', href: '#contact' }],
+  },
 ]
 
-const GITHUB_URL = 'https://github.com/indeepcleaningid/ralabs-portal'
+// Warna CardNav wajib lewat prop style, bukan CSS: komponennya menulis
+// semua variabel --cn-* sebagai inline style, jadi CSS class kalah.
+const PALET_TERANG = {
+  '--cn-panel': '#f8fafc',
+  '--cn-solid': '#f8fafc',
+  '--cn-text': '#0c0c0c',
+  '--cn-muted': 'rgba(12, 12, 12, 0.7)',
+  '--cn-tile': '#f8fafc',
+  '--cn-tile-rim': 'inset 0 0 0 1px rgba(12, 12, 12, 0.12)',
+  '--cn-edge': 'rgba(12, 12, 12, 0.14)',
+  '--cn-highlight': 'rgba(255, 255, 255, 0.9)',
+  '--cn-hover': 'rgba(12, 12, 12, 0.06)',
+  '--cn-ring': '#d70000',
+  '--cn-shadow': '0 10px 24px -14px rgba(12, 12, 12, 0.35)',
+}
 
-export default function Navbar({ started }) {
-  const [open, setOpen] = useState(false)
-  const [active, setActive] = useState('home')
-  const [ghBounce, setGhBounce] = useState(false)
+const PALET_GELAP = {
+  '--cn-panel': '#0c0c0c',
+  '--cn-solid': '#0c0c0c',
+  '--cn-text': '#f8fafc',
+  '--cn-muted': 'rgba(248, 250, 252, 0.7)',
+  '--cn-tile': '#0c0c0c',
+  '--cn-tile-rim': 'inset 0 0 0 1px rgba(248, 250, 252, 0.14)',
+  '--cn-edge': 'rgba(248, 250, 252, 0.16)',
+  '--cn-highlight': 'rgba(255, 255, 255, 0.06)',
+  '--cn-hover': 'rgba(248, 250, 252, 0.08)',
+  '--cn-ring': '#d70000',
+  '--cn-shadow': '0 10px 24px -14px rgba(0, 0, 0, 0.8)',
+}
 
-  function handleGithubClick() {
-    setGhBounce(true)
-    setTimeout(() => setGhBounce(false), 400)
+export default function Navbar() {
+  const [tema, setTema] = useState(() => bacaTema())
+
+  const gantiTema = () => {
+    const berikutnya = tema === 'gelap' ? 'terang' : 'gelap'
+    pasangTema(berikutnya)
+    setTema(berikutnya)
   }
 
-  // Scroll-spy: section aktif = yang paling akhir sudah lewat garis ~40% viewport.
-  // #home dipegang satu pembungkus di Hero.jsx (bukan tiap varian hero),
-  // biar gak ada ID kembar dan elemen aktif selalu ada di semua breakpoint.
-  // Kasus khusus: kalau udah mentok bawah halaman, paksa section terakhir aktif
-  // (biar section pendek kayak Kontak tetap kena walau gak nyampe garis).
-  useEffect(() => {
-    const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(
-      Boolean,
-    )
-    if (sections.length === 0) return
+  // Label nunjukin tema yang akan dituju, bukan yang sedang aktif.
+  // "Dark" pas temanya terang, "Light" pas temanya gelap.
+  // Nama aksesibelnya diawali teks yang kelihatan itu, supaya pengguna
+  // kontrol suara bisa bilang "klik Dark" dan tetap cocok (WCAG 2.5.3).
+  const labelTema = tema === 'terang' ? 'Dark' : 'Light'
+  const palet = tema === 'gelap' ? PALET_GELAP : PALET_TERANG
 
-    let frame = 0
-
-    function update() {
-      frame = 0
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-      if (window.scrollY >= maxScroll - 2) {
-        setActive(sections[sections.length - 1].id)
-        return
-      }
-
-      const line = window.innerHeight * 0.4
-      let current = sections[0].id
-      for (const section of sections) {
-        if (section.getBoundingClientRect().top <= line) current = section.id
-      }
-      setActive(current)
-    }
-
-    function onScroll() {
-      if (!frame) frame = requestAnimationFrame(update)
-    }
-
-    update()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
-      if (frame) cancelAnimationFrame(frame)
-    }
-  }, [])
-
-  // Escape menutup menu, supaya user keyboard tidak kesulitan (plan 5.1).
-  useEffect(() => {
-    if (!open) return
-
-    function onKeyDown(event) {
-      if (event.key === 'Escape') setOpen(false)
-    }
-
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
-  }, [open])
+  const tombolTema = (
+    <button
+      type="button"
+      className="cn-tema"
+      onClick={gantiTema}
+      aria-label={`${labelTema}, ganti ke tema ${tema === 'terang' ? 'gelap' : 'terang'}`}
+    >
+      {labelTema}
+    </button>
+  )
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-      <nav
-        className={`pointer-events-auto relative mx-auto mt-4 flex h-[52px] w-[calc(100%-50px)] max-w-[calc(1152px-50px)] items-center justify-between rounded-full bg-white pl-5 pr-2 shadow-[0_6px_24px_rgba(27,24,24,0.18)] transition-opacity duration-[800ms] ease-out sm:pl-8 ${
-          started ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-        {/* Logo navbar: lockup gabungan kubus + teks (satu file).
-            Sebelumnya 2 img terpisah (favicon-logo + logo-text, teksnya di-hide <sm).
-            alt dikosongin karena link-nya udah punya aria-label. */}
-        <a href="/" className="flex shrink-0 items-center" aria-label="RaLabs beranda">
-          <img
-            src="/images/logo+logotext.webp"
-            alt=""
-            width="450"
-            height="166"
-            className="h-9 w-auto"
+    <header className="navbar-ralabs sticky top-0 z-40">
+      {/* Pita: bidang selebar layar, sedikit lebih tinggi dari bar CardNav. */}
+      <div className="pita-navbar">
+        <div className="px-4">
+          <CardNav
+            logo="/images/logo+logotext.webp"
+            logoAlt="RaLabs"
+            logoHref="#home"
+            items={KARTU}
+            actions={tombolTema}
+            cta={{
+              label: 'GitHub',
+              href: GITHUB,
+              // Buka di tab baru, jadi portalnya nggak ketutup. noopener
+              // nutup celah reverse tabnabbing, noreferrer sekalian.
+              target: '_blank',
+              rel: 'noopener noreferrer',
+            }}
+            theme={tema === 'gelap' ? 'dark' : 'light'}
+            surface="solid"
+            openOn="click"
+            cardEffect="unfold"
+            stagger={0.18}
+            bounce={0.4}
+            speed={0.9}
+            cardHeight={160}
+            maxWidth={1120}
+            accentColor="#d70000"
+            menuLabel={true}
+            intro={true}
+            ariaLabel="Navigasi utama"
+            style={{ ...palet, '--cn-logo': '34px' }}
           />
-        </a>
-
-        {/* Desktop: link di tengah pill, yang aktif jadi kotak hitam full-height */}
-        <ul className="absolute left-1/2 hidden h-full -translate-x-1/2 items-stretch md:flex">
-          {NAV_ITEMS.map((item) => {
-            const isActive = active === item.id
-            return (
-              <li key={item.href} className="flex">
-                <a
-                  href={item.href}
-                  aria-current={isActive ? 'true' : undefined}
-                  style={{ WebkitTextStroke: isActive ? '0px' : '0.03vw #1B1818' }}
-                  className={`inline-flex items-center px-4 text-sm font-bold transition-colors ${
-                    isActive
-                      ? 'bg-ink text-white'
-                      : 'text-ink hover:text-accent'
-                  }`}
-                >
-                  {item.label}
-                </a>
-              </li>
-            )
-          })}
-        </ul>
-
-        <div className="flex shrink-0 items-center gap-1">
-          <TiltCard maxTilt={10} className="hidden md:block">
-            <a
-              href={GITHUB_URL}
-              target="_blank"
-              rel="noreferrer"
-              onClick={handleGithubClick}
-              className={`inline-flex min-h-11 items-center rounded-full bg-accent px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-ink hover:text-white ${
-                ghBounce ? 'animate-bounce' : ''
-              }`}
-            >
-              Github
-            </a>
-          </TiltCard>
-
-          {/* Mobile: tombol buka tutup menu.
-              Sengaja BUKAN ikon 3 garis (default paling mainstream): kotak ink
-              + 2 balok putih yang morf jadi X pas kebuka. Kotaknya jadi merah
-              saat terbuka, sejalan sama bahasa "kotak ink = state" yang udah
-              dipakai di nav desktop (item aktif = kotak hitam full-height).
-              🔒 LOCKED sama Bang Rob (16 Okt 2026). */}
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls="menu-nav"
-            aria-label={open ? 'Tutup menu' : 'Buka menu'}
-            onClick={() => setOpen((value) => !value)}
-            className={`inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition-colors duration-200 md:hidden ${
-              open ? 'bg-accent' : 'bg-ink'
-            }`}
-          >
-            <span
-              aria-hidden="true"
-              className="relative flex h-[18px] w-[18px] items-center justify-center"
-            >
-              <span
-                className={`absolute h-[2.5px] w-[18px] rounded-full bg-white transition-transform duration-300 ease-out ${
-                  open ? 'rotate-45' : '-translate-y-[4px]'
-                }`}
-              />
-              <span
-                className={`absolute h-[2.5px] w-[18px] rounded-full bg-white transition-transform duration-300 ease-out ${
-                  open ? '-rotate-45' : 'translate-y-[4px]'
-                }`}
-              />
-            </span>
-          </button>
         </div>
-
-        {/* Panel menu mobile. Klik link langsung menutup menu.
-            Shadow-nya sengaja shadow biasa (bukan neu-card) biar gak ada halo
-            putih/glow pas panelnya kebuka.
-            🔒 LOCKED sama Bang Rob (16 Okt 2026). */}
-        {open && (
-          <ul
-            id="menu-nav"
-            className="absolute left-0 right-0 top-full z-50 mt-3 overflow-hidden rounded-[1.25rem] bg-white py-2 shadow-[0_6px_24px_rgba(27,24,24,0.18)] md:hidden"
-          >
-            {NAV_ITEMS.map((item) => (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  onClick={() => setOpen(false)}
-                  className="flex min-h-11 items-center px-5 text-sm font-bold transition hover:text-accent"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-            <li className="px-3 pb-2 pt-1">
-              <a
-                href={GITHUB_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="flex min-h-11 items-center justify-center rounded-full bg-accent px-5 text-sm font-bold text-white transition-colors duration-200 hover:bg-ink hover:text-white"
-              >
-                Github
-              </a>
-            </li>
-          </ul>
-        )}
-      </nav>
+      </div>
     </header>
   )
 }

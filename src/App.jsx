@@ -1,13 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './pages/Home.jsx'
-import GtagTracker from './components/GtagTracker.jsx'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import Portal from './pages/Portal.jsx'
 
 export default function App() {
   return (
     <BrowserRouter>
-      <GtagTracker />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Portal />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

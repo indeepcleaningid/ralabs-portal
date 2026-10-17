@@ -4,15 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        surface: '#E8EEF4',
-        ink: '#1B1818',
-        accent: '#E3222B',
-        sun: '#FFE578',
+        // Empat warna palet RaLabs. Tidak ada warna kelima.
+        kertas: '#F8FAFC',
+        tinta: '#0C0C0C',
+        merah: '#D70000',
+        kuning: '#FFE578',
+        // Bidang dan teks ikut tema lewat CSS variable di global.css.
+        bidang: 'var(--bidang)',
+        teks: 'var(--teks)',
+        garis: 'var(--garis)',
+        lawan: 'var(--lawan-bidang)',
+        lawanTeks: 'var(--lawan-teks)',
       },
       fontFamily: {
-        sans: ['Comfortaa', 'ui-rounded', 'sans-serif'],
-        display: ['Comfortaa', 'ui-rounded', 'sans-serif'],
-        body: ['Comfortaa', 'ui-rounded', 'sans-serif'],
+        sans: ['Comfortaa', 'ui-rounded', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
     },

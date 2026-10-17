@@ -1,14 +1,14 @@
 /* TEAM */
-Name: Robby Aliasa Akbar
-Role: Founder, Bengkel Kode dan Karya
-Location: Bekasi, Indonesia
+Nama: Robby Aliasa Akbar
+Kota: Bekasi, Indonesia
 
 /* SITE */
-Standards: HTML5, CSS3, JavaScript
-Components: React 18, Vite 6, Tailwind CSS 3.4, Framer Motion
-Software: Node.js, Git
+Nama: RaLabs
+Alamat: https://ralabs.my.id/
+Bahasa: Bahasa Indonesia
+Standar: HTML5, CSS3, JavaScript
+Komponen: React 18, Vite 6, Tailwind CSS 3.4, React Router 7
 Host: Hostinger shared hosting (Apache)
-Language: Bahasa Indonesia
 
 /* THANKS */
-Font Comfortaa dan JetBrains Mono dari Google Fonts.
+Comfortaa dan JetBrains Mono dari Google Fonts.
