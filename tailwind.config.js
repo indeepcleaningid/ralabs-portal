@@ -17,9 +17,9 @@ export default {
         lawanTeks: 'var(--lawan-teks)',
       },
       fontFamily: {
-        /* Headline hero pakai Bebas Neue (condensed); Manrope jadi cadangan.
-           Font lain tetap Comfortaa + JetBrains Mono. */
-        headline: ['Bebas Neue', 'Manrope', 'ui-rounded', 'system-ui', 'sans-serif'],
+        /* Headline hero pakai Archivo (variable, di-set weight 900 di komponen).
+           Manrope jadi cadangan. Font lain tetap Comfortaa + JetBrains Mono. */
+        headline: ['Archivo', 'Manrope', 'ui-rounded', 'system-ui', 'sans-serif'],
         /* Manrope khusus judul tebal; sisanya tetap Comfortaa + JetBrains Mono. */
         heading: ['Manrope', 'Comfortaa', 'ui-rounded', 'system-ui', 'sans-serif'],
         sans: ['Comfortaa', 'ui-rounded', 'system-ui', 'sans-serif'],
