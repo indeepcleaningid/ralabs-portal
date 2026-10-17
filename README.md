@@ -1,87 +1,48 @@
 # RaLabs
 
-Portal utama dari `https://ralabs.my.id/`. Ini adalah bengkel kode dan karya gue, satu rumah untuk semua apps, website, dan tools yang gue bangun dan berani live. Saat ini yang hidup baru portal akarnya. Slot subdomain `*.ralabs.my.id` disiapkan di sini untuk menyambut karya berikutnya satu per satu.
+Portal di `https://ralabs.my.id/`. Satu halaman berisi aplikasi, situs, dan alat yang saya bangun, plus alamat lain untuk portofolio yang sama. Semua karya berikutnya hidup di subdomain `*.ralabs.my.id`.
 
-Repo ini di-push ke GitHub lalu ditarik otomatis oleh hPanel Hostinger. Setiap merge ke `main` langsung live, jadi semua perubahan wajib lewat pull request dulu.
+Repo ini disambung ke hPanel Hostinger. Yang tayang adalah isi `public_html/`, bukan server Node.
 
-## Link
-
-- Live: https://ralabs.my.id/
-- Porto gue: https://robbyaliasaakbar.github.io
-- Bisnis gue: https://indeepcleaningid.site
-
-## Stack
-
-- React 18 dengan Vite 6, build statis untuk shared hosting
-- Tailwind CSS 3.4 lewat PostCSS, bundled sendiri tanpa CDN
-- React Router 7 untuk navigasi
-- Font Comfortaa (body dan display) plus JetBrains Mono (label data)
-- Backend: belum ada di v1. Kalau nanti butuh, pakai PHP 8.3 native plus MySQL lewat phpMyAdmin. Tanpa Composer, tanpa Docker, tanpa VPS.
-- Analytics: Google Analytics 4 dengan ID `G-QCTML33T41`
-
-Shared hosting Hostinger hanya menerima file statis, PHP, dan MySQL. Itu sebabnya hasil build React yang disalin ke root repo ini yang akhirnya tayang, bukan server Node.
-
-## Struktur
-
-```
-public_html/
-├── README.md            ← file ini
-├── engineering.md       ← log perubahan tiap PR
-├── contributing.md      ← aturan pull request
-├── LICENSE              ← MIT
-├── entries/index.html   ← sumber HTML, ini yang diedit
-├── src/                 ← sumber React, ini yang diedit
-│   ├── pages/           ← rakitan halaman
-│   ├── components/      ← potongan UI
-│   └── styles/          ← token warna plus util neumorphism
-├── public/              ← file statis yang ikut tercopy saat build
-│   └── images/          ← hasil copy dari ../assets/ (lihat aturan aset)
-├── index.html           ← hasil build, jangan diedit langsung
-└── assets/              ← hasil build, jangan diedit langsung
-```
-
-Aset logo dan banner asli ada di folder `../assets/` di luar repo. Folder itu hanya referensi. Tiap file yang mau dipakai wajib dicopy dulu ke `public/images/`, lalu barulah dipanggil dari code. Code tidak boleh menunjuk ke `../assets/` karena folder itu tidak ikut ter-deploy.
-
-## Cara jalan lokal
+## Menjalankan
 
 ```bash
 cd public_html
-
-# sekali saja: copy aset referensi ke meja kerja
-cp ../assets/favicon-logo.webp ../assets/logo-text.webp \
-   "../assets/logo+logotext.webp" ../assets/og-banner.webp public/images/
-
 npm install
 npm run dev
 ```
 
-Dev server jalan di port 5015. Karena sumber HTML ada di `entries/`, buka:
+Dev server ada di `http://localhost:5015/`.
 
-`http://localhost:5015/entries/index.html`
-
-File `index.html` di root adalah hasil build, jadi kalau dibuka di `/` selama pengembangan kamu akan melihat versi lama tanpa HMR.
-
-## Cara build dan deploy
+## Build
 
 ```bash
-npm run build                 # hasil masuk dist/
-cp dist/entries/*.html .      # timpa index.html di root
-cp -r dist/assets .           # timpa aset di root
-cp -r dist/images .           # timpa gambar di root
+npm run build
+cp dist/entries/*.html .
+cp -r dist/assets .
+cp -r dist/images .
 ```
 
-Setelah itu wajib lewat pull request, bukan push langsung ke `main`:
+Hasil build (`index.html`, `assets/`, `images/`) disalin ke root repo ini. File-file itu hasil mesin, jangan diedit langsung. Sumbernya ada di `entries/` dan `src/`.
 
-```bash
-git checkout -b feat/nama-batch
-git add . && git commit -m "feat: ..."
-git push -u origin feat/nama-batch
-```
+## Perubahan
 
-Buka PR ke `main`, tunggu review, merge manual di GitHub. hPanel Hostinger akan menarik `main` dan site `ralabs.my.id` ikut ter-update.
+Semua perubahan masuk lewat pull request ke `main`. Merge ke `main` langsung live, karena Hostinger menarik `main` otomatis. Aturan lengkapnya ada di `contributing.md`.
 
-Detail aturannya ada di `contributing.md`. Log perubahannya ada di `engineering.md`.
+## Isi singkat
+
+- Tema terang dan gelap, ikut `prefers-color-scheme`, pilihan disimpan di `localStorage`. Navbar tetap berwarna kertas di kedua tema.
+- Gerbang di layar pertama: kubus geometry Three.js dan satu tombol `Masuk`.
+- Sembilan proyek di bagian Collection: tumpukan kartu di layar lebar, daftar di layar sempit.
+- Tanpa backend. Kontak lewat `mailto:` dan WhatsApp.
+- Analytics: Google Analytics 4 dengan ID `G-QCTML33T41`.
+
+Kalau nanti perlu backend, di shared hosting ini hanya PHP 8.3 native dan MySQL. Tanpa Composer, tanpa Docker.
+
+## Aset
+
+Berkas logo, `og-banner.webp`, dan `mascot-enjoy.svg` ada di `public/images/`. Folder `../assets/` di luar repo hanya referensi; code tidak menunjuk ke sana.
 
 ## Lisensi
 
-MIT, lihat `LICENSE`.
+MIT. Lihat `LICENSE`.

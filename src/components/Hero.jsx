@@ -1,31 +1,38 @@
-import HeroDesktop from './HeroDesktop.jsx'
-import HeroTablet from './HeroTablet.jsx'
-import HeroMobile from './HeroMobile.jsx'
-
-// Pengatur Hero: tampilkan sesuai breakpoint.
-// - Desktop  : lg ke atas   -> HeroDesktop (SUDAH DI-LOCK)
-// - Tablet   : md sampai lg -> HeroTablet (SUDAH DI-LOCK)
-// - Mobile   : di bawah md  -> HeroMobile
-// Penting: tiap versi file sendiri-sendiri, jadi ngurus satu gak ngerusak yang lain.
-// Prop `started` wajib diteruskan ke tiap versi, biar animasi pasca-preloader jalan.
-//
-// 16 Okt 2026 - hero auto-fit: pembungkus (stage) tiap versi sekarang pegang
-// tinggi 1 layar + clipping + centering, jadi kotak rasio artboard di dalamnya
-// bisa di-contain tanpa ngerusak posisi elemen. Detail + alasannya ada di
-// global.css (.hero-stage-desktop / .hero-stage-tablet).
-// 16 Okt 2026 (batch 2): tablet ikut auto-fit. Mobile masih pakai pembungkus
-// lama, dirapikan di batch berikutnya biar satu PR satu versi.
-export default function Hero({ started }) {
+export default function Hero() {
   return (
-    <section id="home" aria-label="Beranda" className="relative w-full">
-      <div className="hero-stage-desktop hidden lg:flex">
-        <HeroDesktop started={started} />
-      </div>
-      <div className="hero-stage-tablet hidden md:flex lg:hidden">
-        <HeroTablet started={started} />
-      </div>
-      <div className="block md:hidden">
-        <HeroMobile started={started} />
+    <section id="home" className="bg-bidang text-teks">
+      <div className="mx-auto grid max-w-6xl gap-y-10 px-4 py-16 md:grid-cols-12 md:items-center md:gap-x-[40px] md:py-24">
+        <div className="min-w-0 md:col-span-7">
+          <h1 className="judul-hero">
+            Ini portal untuk aplikasi, situs, dan alat yang saya bangun. Yang punya halaman sudah live, dan saya rawat
+            berkala. Yang tidak punya halaman, tautannya mengarah ke sumbernya.
+          </h1>
+          <p className="isi mt-6">Yang sedang saya fokuskan ada di InDeep Cleaning ID.</p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <a href="https://indeepcleaningid.site/" target="_blank" rel="noopener noreferrer" className="tombol-merah">
+              Lihat InDeep Cleaning ID
+            </a>
+            <a
+              href="https://robbyaliasa.tongkrongan.tech/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tombol-garis"
+            >
+              Lihat Portfolio
+            </a>
+          </div>
+        </div>
+
+        {/* Benda di kanan, bukan latar. Teks tidak pernah melintas di atas gambar. */}
+        <div className="flex min-w-0 justify-start md:col-span-5 md:justify-end">
+          <img
+            src="/images/banner-logo.webp"
+            alt="Tanda RaLabs"
+            className="h-auto w-[192px] max-w-full md:w-[240px]"
+            width={366}
+            height={538}
+          />
+        </div>
       </div>
     </section>
   )

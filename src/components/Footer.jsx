@@ -1,30 +1,24 @@
-// Footer satu baris sesuai plan 5.6. Link file bantuan dibuat di batch 7,
-// jadi kalau diklik sekarang memang sudah ada isinya di public/.
-const HELP_LINKS = [
-  { label: 'robots.txt', href: '/robots.txt' },
-  { label: 'sitemap.xml', href: '/sitemap.xml' },
-  { label: 'humans.txt', href: '/humans.txt' },
-]
-
 export default function Footer() {
   return (
-    <footer className="mx-auto max-w-6xl px-5 pb-10 sm:px-8">
-      <div className="flex flex-col items-center justify-between gap-4 border-t border-ink/10 pt-8 sm:flex-row">
-        <p className="text-center text-sm text-ink/80 sm:text-left">
-          RaLabs 2026. Dibangun dengan React dan PHP di shared hosting.
-        </p>
-
-        <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
-          {HELP_LINKS.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                className="inline-flex min-h-11 items-center text-ink/80 underline underline-offset-4 transition hover:text-accent"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
+    <footer className="bg-lawan text-lawanTeks">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 px-4 py-6">
+        <p className="text-sm">© 2026 RaLabs · Portal karya yang sedang berjalan. · Dev: Robby Aliasa Akbar</p>
+        <ul className="flex flex-wrap gap-x-5">
+          <li>
+            <a href="/robots.txt" className="inline-flex min-h-[44px] items-center font-mono text-xs">
+              robots.txt
+            </a>
+          </li>
+          <li>
+            <a href="/sitemap.xml" className="inline-flex min-h-[44px] items-center font-mono text-xs">
+              sitemap.xml
+            </a>
+          </li>
+          <li>
+            <a href="/humans.txt" className="inline-flex min-h-[44px] items-center font-mono text-xs">
+              humans.txt
+            </a>
+          </li>
         </ul>
       </div>
     </footer>

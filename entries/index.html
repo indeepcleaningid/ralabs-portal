@@ -1,45 +1,37 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RaLabs. Portal Bengkel Kode Bang Rob</title>
+    <title>RaLabs. Portal karya Robby Aliasa Akbar</title>
     <meta
       name="description"
-      content="Portal utama RaLabs. Semua apps, website, dan tools yang gue bangun dan live ada di sini, satu per satu dari ralabs.my.id."
+      content="Portal aplikasi, situs, dan alat yang dibangun Robby Aliasa Akbar. Yang punya halaman sudah live. Yang tidak, tautannya mengarah ke sumbernya."
     />
-
     <link rel="canonical" href="https://ralabs.my.id/" />
-
     <link rel="icon" type="image/webp" href="/images/favicon-logo.webp" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="RaLabs" />
-    <meta property="og:title" content="RaLabs. Portal Bengkel Kode Bang Rob" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:url" content="https://ralabs.my.id/" />
+    <meta property="og:title" content="RaLabs. Portal karya Robby Aliasa Akbar" />
     <meta
       property="og:description"
-      content="Portal utama RaLabs. Semua apps, website, dan tools yang gue bangun dan live ada di sini."
+      content="Portal aplikasi, situs, dan alat yang dibangun Robby Aliasa Akbar. Yang punya halaman sudah live. Yang tidak, tautannya mengarah ke sumbernya."
     />
-    <meta property="og:url" content="https://ralabs.my.id/" />
     <meta property="og:image" content="https://ralabs.my.id/images/og-banner.webp" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image:alt" content="Banner RaLabs" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="RaLabs. Portal Bengkel Kode Bang Rob" />
+    <meta name="twitter:title" content="RaLabs. Portal karya Robby Aliasa Akbar" />
     <meta
       name="twitter:description"
-      content="Portal utama RaLabs. Semua apps, website, dan tools yang gue bangun dan live ada di sini."
+      content="Portal aplikasi, situs, dan alat yang dibangun Robby Aliasa Akbar. Yang punya halaman sudah live. Yang tidak, tautannya mengarah ke sumbernya."
     />
     <meta name="twitter:image" content="https://ralabs.my.id/images/og-banner.webp" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
-      rel="stylesheet"
-    />
 
     <script type="application/ld+json">
       {
@@ -50,8 +42,9 @@
             "@id": "https://ralabs.my.id/#website",
             "url": "https://ralabs.my.id/",
             "name": "RaLabs",
-            "description": "Portal utama RaLabs. Semua apps, website, dan tools yang gue bangun dan live ada di sini.",
-            "inLanguage": "id"
+            "description": "Portal aplikasi, situs, dan alat yang dibangun Robby Aliasa Akbar. Yang punya halaman sudah live. Yang tidak, tautannya mengarah ke sumbernya.",
+            "inLanguage": "id",
+            "publisher": { "@id": "https://ralabs.my.id/#organization" }
           },
           {
             "@type": "Organization",
@@ -59,25 +52,58 @@
             "name": "RaLabs",
             "url": "https://ralabs.my.id/",
             "logo": "https://ralabs.my.id/images/logo+logotext.webp",
-            "founder": {
-              "@type": "Person",
-              "name": "Robby Aliasa Akbar"
-            }
+            "founder": { "@id": "https://ralabs.my.id/#person" }
+          },
+          {
+            "@type": "Person",
+            "@id": "https://ralabs.my.id/#person",
+            "name": "Robby Aliasa Akbar",
+            "url": "https://ralabs.my.id/",
+            "sameAs": [
+              "https://github.com/robbyaliasaakbar",
+              "https://www.linkedin.com/in/robby-aliasa-akbar-001a2a267",
+              "https://www.reddit.com/user/Full_Director87/",
+              "https://www.instagram.com/ybboraa/",
+              "https://www.tiktok.com/@ybborraa",
+              "https://robbyaliasa.tongkrongan.tech/",
+              "https://indeepcleaningid.site/"
+            ]
           }
         ]
       }
     </script>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Pasang tema sebelum cat pertama, supaya tidak kedip. -->
+    <script>
+      ;(function () {
+        try {
+          var tema = localStorage.getItem('ralabs-tema')
+          if (tema !== 'terang' && tema !== 'gelap') {
+            tema = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'gelap' : 'terang'
+          }
+          document.documentElement.setAttribute('data-theme', tema)
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'terang')
+        }
+      })()
+    </script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-QCTML33T41"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      // Pageview awal dikirim oleh komponen GtagTracker di React,
-      // jadi pageview otomatis dari config dimatikan supaya tidak dobel.
-      gtag('config', 'G-QCTML33T41', { send_page_view: false });
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+      gtag('config', 'G-QCTML33T41')
     </script>
   </head>
   <body>
